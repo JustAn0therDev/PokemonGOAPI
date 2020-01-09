@@ -27,5 +27,31 @@ namespace PokemonGOAPI.Services
                     return pokemonData;
             }
         }
+
+        public static Dictionary<string, List<PokemonCandy>> FilterPokemonListByNumberOfCandiesAndGroupByPokemonId(this Dictionary<string, List<PokemonCandy>> keyValuePairs, string numberOfCandies)
+        {
+            List<PokemonCandy> filteredPokemonCandyList;
+            keyValuePairs.TryGetValue(numberOfCandies, out filteredPokemonCandyList);
+
+            filteredPokemonCandyList = filteredPokemonCandyList.GroupBy(gb => gb.PokemonId).Select(s => s.FirstOrDefault()).ToList();
+
+            keyValuePairs = new Dictionary<string, List<PokemonCandy>>()
+                    {
+                        { numberOfCandies, filteredPokemonCandyList }
+                    };
+            return keyValuePairs;
+        }
+
+        public static Dictionary<string, List<PokemonBuddyDistance>> FilterPokemonBuddyDistancesBySearchAndValue(this Dictionary<string, List<PokemonBuddyDistance>> keyValuePairs, string distanceInKm)
+        {
+            List<PokemonBuddyDistance> filteredPokemonBuddyDistancesList;
+            keyValuePairs.TryGetValue(distanceInKm, out filteredPokemonBuddyDistancesList);
+
+            keyValuePairs = new Dictionary<string, List<PokemonBuddyDistance>>()
+                    {
+                        { distanceInKm, filteredPokemonBuddyDistancesList }
+                    };
+            return keyValuePairs;
+        }
     }
 }

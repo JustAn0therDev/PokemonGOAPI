@@ -10,7 +10,7 @@ namespace PokemonGOAPI.Controllers
 {
     [ApiController]
     [Route("[controller]")]
-    public class PokemonController : ControllerBase
+    public class PokemonStatsController : ControllerBase
     {
         [HttpGet]
         public IActionResult Get([FromQuery]string searchBy, [FromQuery]string value)
@@ -43,7 +43,7 @@ namespace PokemonGOAPI.Controllers
                     if (response.PokemonData.Count == 0)
                         response.Message = "No Pokemon has been found with the provided filter. Did you mean to send something else?";
 
-                    return Ok(response);
+                    return NotFound(response);
                 }
 
                 return Ok(response);
