@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using Newtonsoft.Json;
 using Microsoft.AspNetCore.Mvc;
 using RestSharp;
 using PokemonGOAPI.Entities.Arguments;
@@ -23,6 +24,7 @@ namespace PokemonGOAPI.Controllers
                 request.BuildDefaultHeaders();
 
                 var response = client.Execute<Dictionary<string, List<NestingPokemon>>>(request);
+
                 resp.NestingPokemon = response.Data;
 
                 if (resp.NestingPokemon.Values.Count == 0)

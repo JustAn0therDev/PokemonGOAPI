@@ -1,22 +1,23 @@
 ﻿using System.Collections.Generic;
 using RestSharp.Deserializers;
 using PokemonGOAPI.Interfaces;
+using PokemonGOAPI.Entities.Arguments;
 
 namespace PokemonGOAPI.Entities.Arguments
 {
-    public class RaidExclusivePokemonResponse : IResponse
+    public class RaidExclusivePokemonResponse : IResponse 
     {
         public bool Success { get; set; }
         public string Message { get; set; }
         public Dictionary<string, List<RaidExclusivePokemon>> RaidExclusivePokemon { get; set; } = new Dictionary<string, List<RaidExclusivePokemon>>(); 
     }
 
-    public class RaidExclusivePokemon
+    public class RaidExclusivePokemon : IPokemonResponse
     {
         [DeserializeAs(Name = "id")]
-        public int Id { get; set; }
+        public int PokemonId { get; set; }
         [DeserializeAs(Name = "name")]
-        public string Name { get; set; }
+        public string PokemonName { get; set; }
         [DeserializeAs(Name = "raid_level")]
         public int RaidLevel { get; set; }
     }
