@@ -24,9 +24,7 @@ namespace PokemonGOAPI.Controllers
 
                 var client = new RestClient("https://pokemon-go1.p.rapidapi.com/pokemon_stats.json");
                 var request = new RestRequest(Method.GET);
-
-                request.AddHeader("X-RapidAPI-Key", "4d05572d05msh8850743a12d5d73p17280fjsn86033a0fdb9a");
-                request.AddHeader("Accept", "application/json");
+                request.BuildDefaultHeaders();
 
                 response.PokemonData = client.Execute<List<PokemonData>>(request).Data;
 
