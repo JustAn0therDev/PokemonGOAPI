@@ -4,7 +4,6 @@ using RestSharp;
 using System.Collections.Generic;
 using PokemonGOAPI.Entities;
 using PokemonGOAPI.Entities.Arguments;
-using PokemonGOAPI.Services;
 
 namespace PokemonGOAPI.Controllers
 {
@@ -15,17 +14,15 @@ namespace PokemonGOAPI.Controllers
         [HttpGet]
         public IActionResult Get([FromQuery]string distanceInKm)
         {
-            PokemonBuddyDistancesResponse resp = new PokemonBuddyDistancesResponse();
             try
             {
+                var resp = new PokemonBuddyDistancesResponse();
                 var client = new RestClient("https://pokemon-go1.p.rapidapi.com/pokemon_buddy_distances.json");
 
-                var request = new RestRequest();
+                var request = new RestRequest(Method.GET);
                 request.BuildDefaultHeaders();
 
-                var response = client.Execute<Dictionary<string, List<PokemonBuddyDistance>>>(request);
-
-                resp.PokemonBuddyDistances = response.Data;
+                resp.PokemonBuddyDistances = client.Execute<Dictionary<string, List<PokemonBuddyDistance>>>(request).Data;
                 resp.Success = true;
 
                 if (!string.IsNullOrEmpty(distanceInKm))

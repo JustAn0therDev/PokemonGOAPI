@@ -4,7 +4,6 @@ using System.Linq;
 using Microsoft.AspNetCore.Mvc;
 using PokemonGOAPI.Entities;
 using PokemonGOAPI.Entities.Arguments;
-using PokemonGOAPI.Services;
 using RestSharp;
 
 namespace PokemonGOAPI.Controllers
@@ -16,9 +15,9 @@ namespace PokemonGOAPI.Controllers
         [HttpGet]
         public IActionResult Get([FromQuery]string numberOfCandies)
         {
-            var result = new PokemonCandyResponse();
             try
             {
+                var result = new PokemonCandyResponse();
                 var client = new RestClient("https://pokemon-go1.p.rapidapi.com/pokemon_candy_to_evolve.json");
 
                 var request = new RestRequest();

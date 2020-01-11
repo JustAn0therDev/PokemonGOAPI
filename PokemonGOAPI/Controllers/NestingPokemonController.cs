@@ -15,9 +15,9 @@ namespace PokemonGOAPI.Controllers
         [HttpGet]
         public IActionResult Get()
         {
-            NestingPokemonResponse resp = new NestingPokemonResponse();
             try
             {
+                var resp = new NestingPokemonResponse();
                 var client = new RestClient("https://pokemon-go1.p.rapidapi.com/nesting_pokemon.json");
 
                 var request = new RestRequest(Method.GET);

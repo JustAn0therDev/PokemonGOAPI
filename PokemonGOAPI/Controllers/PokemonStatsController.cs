@@ -2,7 +2,6 @@
 using Microsoft.AspNetCore.Mvc;
 using PokemonGOAPI.Entities;
 using PokemonGOAPI.Entities.Arguments;
-using PokemonGOAPI.Services;
 using RestSharp;
 using System.Collections.Generic;
 
@@ -15,10 +14,13 @@ namespace PokemonGOAPI.Controllers
         [HttpGet]
         public IActionResult Get([FromQuery]string searchBy, [FromQuery]string value)
         {
-            PokemonStatsResponse response = new PokemonStatsResponse();
-
             try
             {
+                var parameterCheck = PokemonExtensions.CheckSearchByAndValue(searchBy, value);
+                if (parameterCheck != null)
+                    return BadRequest(parameterCheck.Value);
+
+                var response = new PokemonStatsResponse();
                 if ((string.IsNullOrEmpty(searchBy) && !string.IsNullOrEmpty(value)) || (!string.IsNullOrEmpty(searchBy) && string.IsNullOrEmpty(value)))
                     return BadRequest(new DefaultResponse(false, "The parameters to search for pokemon stats cannot have one of them empty or null."));
 
@@ -33,10 +35,11 @@ namespace PokemonGOAPI.Controllers
 
                 if (!string.IsNullOrEmpty(searchBy))
                 {
+                    List<PokemonData> originalList = response.PokemonData;
                     response.PokemonData = response.PokemonData.FilterPokemonList(searchBy, value);
-                    if (response.PokemonData.Count == 0)
-                        response.Message = "No Pokemon has been found with the provided filter. Did you mean to send something else?";
-                    return NotFound(response);
+                    if (response.PokemonData.Count == originalList.Count)
+                        response.Message = "No filter could be made by using the provided parameters. Did you mean to send something else?";
+                    return Ok(response);
                 }
 
                 response.Success = true;

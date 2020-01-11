@@ -14,9 +14,9 @@ namespace PokemonGOAPI.Controllers
         [HttpGet]
         public IActionResult Get()
         {
-            PokemonShinyResponse resp = new PokemonShinyResponse();
             try
             {
+                var resp = new PokemonShinyResponse();
                 var client = new RestClient("https://pokemon-go1.p.rapidapi.com/shiny_pokemon.json");
 
                 var request = new RestRequest(Method.GET);

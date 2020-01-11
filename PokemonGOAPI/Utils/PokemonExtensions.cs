@@ -1,11 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using PokemonGOAPI.Entities;
 using PokemonGOAPI.Entities.Arguments;
+using Microsoft.AspNetCore.Mvc;
 
-namespace PokemonGOAPI.Services
+namespace System
 {
-    public static class PokemonServices
+    public static class PokemonExtensions
     {
         public static List<PokemonData> FilterPokemonList(this List<PokemonData> pokemonData, string searchBy, string value)
         {
@@ -52,6 +54,39 @@ namespace PokemonGOAPI.Services
                         { distanceInKm, filteredPokemonBuddyDistancesList }
                     };
             return keyValuePairs;
+        }
+
+        public static List<PokemonFastMoves> FilterPokemonFastMovesList(this List<PokemonFastMoves> pokemonData, string searchBy, string value)
+        {
+            switch (searchBy.ToLower())
+            {
+                case "name":
+                    return pokemonData.Where(w => w.Name.ToLower() == value.ToLower()).ToList();
+                case "power":
+                    return pokemonData.Where(w => w.Power == Convert.ToInt32(value)).ToList();
+                case "type":
+                    return pokemonData.Where(w => w.Type == value.ToLower()).ToList();
+                case "stamina_loss_scaler":
+                    return pokemonData.Where(w => w.StaminaLossScaler >= Convert.ToDecimal(value)).ToList();
+                case "duration":
+                    return pokemonData.Where(w => w.Duration >= Convert.ToInt32(value)).ToList();
+                case "energy_delta":
+                    return pokemonData.Where(w => w.EnergyDelta >= Convert.ToInt32(value)).ToList();
+                default:
+                    return pokemonData;
+            }
+        }
+
+        public static ObjectResult CheckSearchByAndValue(string searchBy, string value)
+        {
+            if (string.IsNullOrEmpty(searchBy) && !string.IsNullOrEmpty(value))
+                return new ObjectResult(new DefaultResponse(false, "A request cannot be made by sending a value without a key"));
+
+            else if (string.IsNullOrEmpty(value) && !string.IsNullOrEmpty(searchBy))
+                return new ObjectResult(new DefaultResponse(false, "A request cannot be made by sending a key without a value"));
+
+            else
+                return null;
         }
     }
 }

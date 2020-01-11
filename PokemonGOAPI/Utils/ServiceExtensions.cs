@@ -3,7 +3,7 @@ using PokemonGOAPI.Configurations;
 
 namespace System
 {
-    public static class ExtensionServices
+    public static class ServiceExtensions
     {
         public static void BuildDefaultHeaders(this RestRequest req)
         {

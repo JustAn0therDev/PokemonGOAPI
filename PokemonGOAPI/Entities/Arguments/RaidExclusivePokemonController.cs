@@ -12,9 +12,9 @@ namespace PokemonGOAPI.Entities.Arguments
         [HttpGet]
         public IActionResult Get()
         {
-            RaidExclusivePokemonResponse resp = new RaidExclusivePokemonResponse();
             try
             {
+                RaidExclusivePokemonResponse resp = new RaidExclusivePokemonResponse();
                 var client = new RestClient("https://pokemon-go1.p.rapidapi.com/raid_exclusive_pokemon.json");
                 var request = new RestRequest();
 

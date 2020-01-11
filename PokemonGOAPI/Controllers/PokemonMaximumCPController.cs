@@ -14,10 +14,9 @@ namespace PokemonGOAPI.Controllers
         [HttpGet]
         public IActionResult Get()
         {
-            PokemonMaximumCPResponse resp = new PokemonMaximumCPResponse();
-
             try
             {
+                var resp = new PokemonMaximumCPResponse();
                 var client = new RestClient("https://pokemon-go1.p.rapidapi.com/pokemon_max_cp.json");
 
                 var request = new RestRequest(Method.GET);
