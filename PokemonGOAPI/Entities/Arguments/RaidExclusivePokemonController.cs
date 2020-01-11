@@ -20,8 +20,7 @@ namespace PokemonGOAPI.Entities.Arguments
 
                 request.BuildDefaultHeaders();
 
-                var response = client.Execute<Dictionary<string, List<RaidExclusivePokemon>>>(request);
-                resp.RaidExclusivePokemon = response.Data;
+                resp.RaidExclusivePokemon = client.Execute<Dictionary<string, List<RaidExclusivePokemon>>>(request).Data;
 
                 if (resp.RaidExclusivePokemon.Count == 0)
                 {

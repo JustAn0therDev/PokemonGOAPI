@@ -1,39 +1,40 @@
 ﻿using System;
 using System.Collections.Generic;
-using Newtonsoft.Json;
+using System.Linq;
 using Microsoft.AspNetCore.Mvc;
-using RestSharp;
-using PokemonGOAPI.Entities.Arguments;
 using PokemonGOAPI.Entities;
+using PokemonGOAPI.Entities.Arguments;
+using RestSharp;
 
 namespace PokemonGOAPI.Controllers
 {
     [ApiController]
     [Route("[controller]")]
-    public class NestingPokemonController : ControllerBase
+    public class PokemonShinyController : ControllerBase
     {
         [HttpGet]
         public IActionResult Get()
         {
-            NestingPokemonResponse resp = new NestingPokemonResponse();
+            PokemonShinyResponse resp = new PokemonShinyResponse();
             try
             {
-                var client = new RestClient("https://pokemon-go1.p.rapidapi.com/nesting_pokemon.json");
+                var client = new RestClient("https://pokemon-go1.p.rapidapi.com/shiny_pokemon.json");
 
                 var request = new RestRequest(Method.GET);
                 request.BuildDefaultHeaders();
 
-                resp.NestingPokemon = client.Execute<Dictionary<string, List<NestingPokemon>>>(request).Data;
+                resp.PokemonShinyList = client.Execute<Dictionary<string, List<PokemonShiny>>>(request).Data;
 
-                if (resp.NestingPokemon.Values.Count == 0)
+                if(resp.PokemonShinyList.Count == 0)
                 {
-                    resp.Message = "Nothing was found in the request nesting pokemon list.";
+                    resp.Message = "Nothing returned from the Pokemon Shiny list.";
                     return NotFound(resp);
                 }
 
                 resp.Success = true;
-                resp.Message = "Nesting pokemon list found succesfully.";
+                resp.Message = "Pokemon Shiny list returned successfully.";
                 return Ok(resp);
+
             }
             catch (Exception ex)
             {
@@ -41,4 +42,5 @@ namespace PokemonGOAPI.Controllers
             }
         }
     }
+
 }
