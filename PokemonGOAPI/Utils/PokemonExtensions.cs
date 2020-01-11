@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using PokemonGOAPI.Entities;
 using PokemonGOAPI.Entities.Arguments;
@@ -20,11 +19,11 @@ namespace System
                 case "form":
                     return pokemonData.Where(w => w.Form == value.ToLower()).ToList();
                 case "baseattack":
-                    return pokemonData.Where(w => w.BaseAttack >= Convert.ToInt32(value)).ToList();
+                    return pokemonData.Where(w => w.BaseAttack == Convert.ToInt32(value)).ToList();
                 case "basedefense":
-                    return pokemonData.Where(w => w.BaseDefense >= Convert.ToInt32(value)).ToList();
+                    return pokemonData.Where(w => w.BaseDefense == Convert.ToInt32(value)).ToList();
                 case "basestamina":
-                    return pokemonData.Where(w => w.BaseStamina >= Convert.ToInt32(value)).ToList();
+                    return pokemonData.Where(w => w.BaseStamina == Convert.ToInt32(value)).ToList();
                 default:
                     return pokemonData;
             }
@@ -67,11 +66,35 @@ namespace System
                 case "type":
                     return pokemonData.Where(w => w.Type == value.ToLower()).ToList();
                 case "stamina_loss_scaler":
-                    return pokemonData.Where(w => w.StaminaLossScaler >= Convert.ToDecimal(value)).ToList();
+                    return pokemonData.Where(w => w.StaminaLossScaler == value).ToList();
                 case "duration":
-                    return pokemonData.Where(w => w.Duration >= Convert.ToInt32(value)).ToList();
+                    return pokemonData.Where(w => w.Duration == Convert.ToInt32(value)).ToList();
                 case "energy_delta":
-                    return pokemonData.Where(w => w.EnergyDelta >= Convert.ToInt32(value)).ToList();
+                    return pokemonData.Where(w => w.EnergyDelta == Convert.ToInt32(value)).ToList();
+                default:
+                    return pokemonData;
+            }
+        }
+        public static List<ChargedPokemonMove> FilterChargedPokemonMovesList(this List<ChargedPokemonMove> pokemonData, string searchBy, string value)
+        {
+            switch (searchBy.ToLower())
+            {
+                case "criticalchance":
+                    return pokemonData.Where(w => w.CriticalChance == Convert.ToDecimal(value)).ToList();
+                case "duration":
+                    return pokemonData.Where(w => w.Duration == Convert.ToInt32(value)).ToList();
+                case "form":
+                    return pokemonData.Where(w => w.EnergyDelta == Convert.ToInt32(value)).ToList();
+                case "move_id":
+                    return pokemonData.Where(w => w.MoveId == Convert.ToInt32(value)).ToList();
+                case "name":
+                    return pokemonData.Where(w => w.Name.ToLower() == value.ToLower()).ToList();
+                case "power":
+                    return pokemonData.Where(w => w.Power == Convert.ToInt32(value)).ToList();
+                case "stamina_loss_scaler":
+                    return pokemonData.Where(w => w.StaminaLossScaler == Convert.ToDecimal(value)).ToList();
+                case "type":
+                    return pokemonData.Where(w => w.Type == value.ToLower()).ToList();
                 default:
                     return pokemonData;
             }

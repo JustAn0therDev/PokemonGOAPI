@@ -21,6 +21,7 @@ namespace PokemonGOAPI.Controllers
                     return BadRequest(parameterCheck.Value);
 
                 var response = new PokemonStatsResponse();
+
                 if ((string.IsNullOrEmpty(searchBy) && !string.IsNullOrEmpty(value)) || (!string.IsNullOrEmpty(searchBy) && string.IsNullOrEmpty(value)))
                     return BadRequest(new DefaultResponse(false, "The parameters to search for pokemon stats cannot have one of them empty or null."));
 
@@ -38,7 +39,12 @@ namespace PokemonGOAPI.Controllers
                     List<PokemonData> originalList = response.PokemonData;
                     response.PokemonData = response.PokemonData.FilterPokemonList(searchBy, value);
                     if (response.PokemonData.Count == originalList.Count)
+                    {
                         response.Message = "No filter could be made by using the provided parameters. Did you mean to send something else?";
+                        return BadRequest(response);
+                    }
+                    response.Success = true;
+                    response.Message = "Pokemon Stats list filtered successfully.";
                     return Ok(response);
                 }
 
