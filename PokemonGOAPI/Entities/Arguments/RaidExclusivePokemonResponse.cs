@@ -1,7 +1,6 @@
 ﻿using System.Collections.Generic;
 using RestSharp.Deserializers;
 using PokemonGOAPI.Interfaces;
-using PokemonGOAPI.Entities.Arguments;
 
 namespace PokemonGOAPI.Entities.Arguments
 {
