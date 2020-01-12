@@ -1,5 +1,5 @@
 # PokemonGOAPI
-An API made using .NET Core 3 for gathering and providing information about Pokemon GO.
+An API made using .NET Core 3.0 for gathering and providing information about Pokemon GO.
 
 ## Take note
 - This API is calling another PokemonGO API that provides the data, but with the advantage of having some filters to most of the 
