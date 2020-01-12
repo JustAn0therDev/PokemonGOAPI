@@ -54,7 +54,6 @@ namespace PokemonGOAPI.Controllers
             {
                 return StatusCode(500, new DefaultResponse(false, ex.Message));
             }
-
         }
     }
 }

@@ -12,12 +12,7 @@ namespace PokemonGOAPI.Entities
         #endregion
 
         #region Constructors
-
-        public DefaultResponse()
-        {
-
-        }
-
+        
         public DefaultResponse(bool success, string message)
         {
             Success = success;
