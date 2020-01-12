@@ -41,7 +41,7 @@ namespace PokemonGOAPI.Controllers
                     if (resp.ChargedPokemonMoves.Count == originalList.Count || resp.ChargedPokemonMoves.Count == 0)
                     {
                         resp.Message = "No filter could be made by using the provided parameters. Did you mean to send something else?";
-                        return BadRequest(resp);
+                        return Ok(resp);
                     }
                     resp.Success = true;
                     resp.Message = "Charged Pokemon Moves list filtered successfully.";

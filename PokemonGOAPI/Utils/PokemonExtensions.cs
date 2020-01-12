@@ -80,7 +80,7 @@ namespace System
             switch (searchBy.ToLower())
             {
                 case "criticalchance":
-                    return pokemonData.Where(w => w.CriticalChance == Convert.ToDecimal(value)).ToList();
+                    return pokemonData.Where(w => w.CriticalChance == value).ToList();
                 case "duration":
                     return pokemonData.Where(w => w.Duration == Convert.ToInt32(value)).ToList();
                 case "form":
@@ -92,9 +92,9 @@ namespace System
                 case "power":
                     return pokemonData.Where(w => w.Power == Convert.ToInt32(value)).ToList();
                 case "stamina_loss_scaler":
-                    return pokemonData.Where(w => w.StaminaLossScaler == Convert.ToDecimal(value)).ToList();
+                    return pokemonData.Where(w => w.StaminaLossScaler == value).ToList();
                 case "type":
-                    return pokemonData.Where(w => w.Type == value.ToLower()).ToList();
+                    return pokemonData.Where(w => w.Type.ToLower() == value.ToLower()).ToList();
                 default:
                     return pokemonData;
             }

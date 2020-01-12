@@ -41,7 +41,7 @@ namespace PokemonGOAPI.Controllers
                     if (response.PokemonData.Count == originalList.Count)
                     {
                         response.Message = "No filter could be made by using the provided parameters. Did you mean to send something else?";
-                        return BadRequest(response);
+                        return Ok(response);
                     }
                     response.Success = true;
                     response.Message = "Pokemon Stats list filtered successfully.";

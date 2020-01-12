@@ -14,7 +14,7 @@ namespace PokemonGOAPI.Entities.Arguments
     public class ChargedPokemonMove
     {
         [DeserializeAs(Name = "critical_chance")]
-        public decimal CriticalChance { get; set; }
+        public string CriticalChance { get; set; }
         [DeserializeAs(Name = "duration")]
         public int Duration { get; set; }
         [DeserializeAs(Name = "energy_delta")]
@@ -26,7 +26,7 @@ namespace PokemonGOAPI.Entities.Arguments
         [DeserializeAs(Name = "power")]
         public int Power { get; set; }
         [DeserializeAs(Name = "stamina_loss_scaler")]
-        public decimal StaminaLossScaler { get; set; }
+        public string StaminaLossScaler { get; set; }
         [DeserializeAs(Name = "type")]
         public string Type { get; set; }
     }
