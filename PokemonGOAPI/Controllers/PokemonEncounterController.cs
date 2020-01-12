@@ -33,7 +33,7 @@ namespace PokemonGOAPI.Controllers
                 if (resp.PokemonEncounters.Count == 0)
                 {
                     resp.Message = "Nothing returned from the Pokemon Encounter list.";
-                    return NotFound(resp);
+                    return StatusCode(500, resp);
                 }
 
                 if(!string.IsNullOrEmpty(searchBy))
@@ -43,7 +43,8 @@ namespace PokemonGOAPI.Controllers
                     if (resp.PokemonEncounters.Count == originalList.Count || resp.PokemonEncounters.Count == 0)
                     {
                         resp.Message = "No filter could be made by using the provided parameters. Did you mean something else?";
-                        return Ok(resp);
+                        resp.PokemonEncounters = null;
+                        return BadRequest(resp);
                     }
                     resp.Success = true;
                     resp.Message = "Pokemon Encounter list filtered successfully.";

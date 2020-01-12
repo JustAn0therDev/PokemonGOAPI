@@ -23,36 +23,32 @@ namespace PokemonGOAPI.Controllers
                 var request = new RestRequest();
                 request.BuildDefaultHeaders();
 
-                var response = client.Execute<Dictionary<string, List<PokemonCandy>>>(request);
+                result.AllPokemonCandy = client.Execute<Dictionary<string, List<PokemonCandy>>>(request).Data;
 
-                if (response.Data == null)
+                if (result.AllPokemonCandy.Count == 0)
                 {
-                    result.Success = false;
-                    result.Message = "No data returned from the request made. Did you mean to send something else?";
-                    return NotFound(result);
+                    result.Message = "Nothing returned from the Pokemon Candy list.";
+                    return StatusCode(500, result);
                 }
-
-                result.AllPokemonCandy = response.Data;
 
                 if (!string.IsNullOrEmpty(numberOfCandies))
                 {
-                    result.Success = true;
+                    Dictionary<string, List<PokemonCandy>> originalList = result.AllPokemonCandy;
                     result.AllPokemonCandy = result.AllPokemonCandy.FilterPokemonListByNumberOfCandiesAndGroupByPokemonId(numberOfCandies);
 
-                    if (result.AllPokemonCandy.Values.FirstOrDefault() != null)
+                    if (result.AllPokemonCandy.Count == originalList.Count || result.AllPokemonCandy.Count == 0)
                     {
-                        result.Message = $"List of Pokemon that need {numberOfCandies} candies to evolve retrieved successfully!";
-                        return Ok(result);
+                        result.Message = "A filter using the sent parameters could not be made, did you mean to send something else?";
+                        result.AllPokemonCandy = null;
+                        return BadRequest(result);
                     }
-                    result.Message = $"No pokemon that need {numberOfCandies} candies to evolve has been found on the list. Did you mean to search for something else?";
+                    result.Success = true;
+                    result.Message = $"List of Pokemon that need {numberOfCandies} candies to evolve retrieved successfully!";
                     return Ok(result);
                 }
-
                 result.Success = true;
                 result.Message = "Pokemon Candy list returned successfully.";
-
                 return Ok(result);
-
             }
             catch (Exception ex)
             {

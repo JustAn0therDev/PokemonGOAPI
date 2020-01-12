@@ -31,17 +31,21 @@ namespace PokemonGOAPI.Controllers
 
                 response.PokemonData = client.Execute<List<PokemonData>>(request).Data;
 
-                if (response.PokemonData == null)
-                    return StatusCode(500, new DefaultResponse(false, "Something unexpected happened and nothing returned from the API Call."));
+                if (response.PokemonData.Count == 0)
+                {
+                    response.Message = "Nothing returned from the Pokemon Stats list.";
+                    return StatusCode(500, response);
+                }
 
                 if (!string.IsNullOrEmpty(searchBy))
                 {
                     List<PokemonData> originalList = response.PokemonData;
                     response.PokemonData = response.PokemonData.FilterPokemonList(searchBy, value);
-                    if (response.PokemonData.Count == originalList.Count)
+                    if (response.PokemonData.Count == originalList.Count || response.PokemonData.Count == 0)
                     {
                         response.Message = "No filter could be made by using the provided parameters. Did you mean to send something else?";
-                        return Ok(response);
+                        response.PokemonData = null;
+                        return BadRequest(response);
                     }
                     response.Success = true;
                     response.Message = "Pokemon Stats list filtered successfully.";

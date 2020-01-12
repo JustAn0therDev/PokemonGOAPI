@@ -29,7 +29,7 @@ namespace PokemonGOAPI.Controllers
                 if (resp.ReleasedPokemon.Count == 0)
                 {
                     resp.Message = "Nothing returned from the released pokemon list.";
-                    return NotFound(resp);
+                    return StatusCode(500, resp);
                 }
 
                 resp.Success = true;

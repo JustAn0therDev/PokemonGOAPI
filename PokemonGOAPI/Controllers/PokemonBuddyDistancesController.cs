@@ -23,27 +23,34 @@ namespace PokemonGOAPI.Controllers
                 request.BuildDefaultHeaders();
 
                 resp.PokemonBuddyDistances = client.Execute<Dictionary<string, List<PokemonBuddyDistance>>>(request).Data;
-                resp.Success = true;
+
+                if (resp.PokemonBuddyDistances.Count == 0)
+                {
+                    resp.Message = "Nothing was retrieved from the pokemon buddy distance list.";
+                    return NotFound(resp);
+                }
 
                 if (!string.IsNullOrEmpty(distanceInKm))
                 {
+                    Dictionary<string, List<PokemonBuddyDistance>> originalList = resp.PokemonBuddyDistances;
                     resp.PokemonBuddyDistances = resp.PokemonBuddyDistances.FilterPokemonBuddyDistancesBySearchAndValue(distanceInKm);
-                    if (resp.PokemonBuddyDistances != null)
-                        if (resp.PokemonBuddyDistances.Values.Count == 0)
-                        {
-                            resp.Success = false;
-                            resp.Message = $"No Pokemon that need {distanceInKm}KM in distance has been found. Did you mean to send something else?";
-                            return NotFound(resp);
-                        }
 
+                    if (resp.PokemonBuddyDistances.Count == originalList.Count || resp.PokemonBuddyDistances.Values.Count == 0)
+                    {
+                        resp.Message = $"No Pokemon that need {distanceInKm}KM in distance has been found. Did you mean to send something else?";
+                        resp.PokemonBuddyDistances = null;
+                        return BadRequest(resp);
+                    }
+                    resp.Success = true;
                     resp.Message = $"A list of pokemon that need matching {distanceInKm}KM in distance has been retrieved successfully.";
                     return Ok(resp);
                 }
                 else
                 {
+                    resp.Success = true;
                     resp.Message = "Pokemon buddy distance list retrieved succesfully.";
+                    return Ok(resp);
                 }
-                return Ok(resp);
 
             }
             catch (Exception ex)

@@ -23,13 +23,12 @@ namespace PokemonGOAPI.Controllers
 
                 var request = new RestRequest(Method.GET);
                 request.BuildDefaultHeaders();
-
                 resp.WeatherBoosts = client.Execute<Dictionary<string, List<string>>>(request).Data;
 
                 if (resp.WeatherBoosts.Count == 0)
                 {
                     resp.Message = "Nothing returned from the weather boosts list.";
-                    return NotFound(resp);
+                    return StatusCode(500, resp);
                 }
 
                 resp.Success = true;

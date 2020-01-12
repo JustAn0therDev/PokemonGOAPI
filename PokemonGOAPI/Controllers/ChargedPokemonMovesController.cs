@@ -31,7 +31,7 @@ namespace PokemonGOAPI.Controllers
                 if (resp.ChargedPokemonMoves.Count == 0)
                 {
                     resp.Message = "Nothing from the charged pokemon moves list has been retrieved.";
-                    return NotFound(resp);
+                    return StatusCode(500, resp);
                 }
 
                 if (!string.IsNullOrEmpty(searchBy))
@@ -41,7 +41,8 @@ namespace PokemonGOAPI.Controllers
                     if (resp.ChargedPokemonMoves.Count == originalList.Count || resp.ChargedPokemonMoves.Count == 0)
                     {
                         resp.Message = "No filter could be made by using the provided parameters. Did you mean to send something else?";
-                        return Ok(resp);
+                        resp.ChargedPokemonMoves = null;
+                        return BadRequest(resp);
                     }
                     resp.Success = true;
                     resp.Message = "Charged Pokemon Moves list filtered successfully.";

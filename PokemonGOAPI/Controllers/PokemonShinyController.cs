@@ -27,7 +27,7 @@ namespace PokemonGOAPI.Controllers
                 if(resp.PokemonShinyList.Count == 0)
                 {
                     resp.Message = "Nothing returned from the Pokemon Shiny list.";
-                    return NotFound(resp);
+                    return StatusCode(500, resp);
                 }
 
                 resp.Success = true;

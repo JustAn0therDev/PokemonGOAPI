@@ -1,7 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using PokemonGOAPI.Entities;
 using PokemonGOAPI.Entities.Arguments;
@@ -28,8 +26,8 @@ namespace PokemonGOAPI.Controllers
 
                 if (resp.PokemonFastMoves.Count == 0)
                 {
-                    resp.Message = "Nothing was found in the Pokemon fast moves list.";
-                    return NotFound(resp);
+                    resp.Message = "Nothing returned from the Pokemon fast moves list.";
+                    return StatusCode(500, resp);
                 }
 
                 resp.Success = true;

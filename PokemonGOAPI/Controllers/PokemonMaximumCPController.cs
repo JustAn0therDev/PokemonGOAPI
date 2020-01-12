@@ -26,8 +26,8 @@ namespace PokemonGOAPI.Controllers
 
                 if (resp.PokemonMaximumCPList.Count == 0)
                 {
-                    resp.Message = "Nothing was found in the Pokemon Maximum CP list.";
-                    return NotFound(resp);
+                    resp.Message = "Nothing returned from the Pokemon Maximum CP list.";
+                    return StatusCode(500, resp);
                 }
 
                 resp.Success = true;
