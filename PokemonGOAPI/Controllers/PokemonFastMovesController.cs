@@ -14,14 +14,10 @@ namespace PokemonGOAPI.Controllers
     public class PokemonFastMovesController : ControllerBase
     {
         [HttpGet]
-        public IActionResult Get([FromQuery]string searchBy, [FromQuery]string value)
+        public IActionResult Get()
         {
             try
             {
-                var parameterCheck = PokemonExtensions.CheckSearchByAndValue(searchBy, value);
-                if (parameterCheck != null)
-                    return BadRequest(parameterCheck.Value);
-
                 var resp = new PokemonFastMovesResponse();
                 var client = new RestClient("https://pokemon-go1.p.rapidapi.com/fast_moves.json");
 
