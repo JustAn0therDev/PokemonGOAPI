@@ -1,9 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using System;
-using System.Collections.Generic;
-using RestSharp;
 using PokemonGOAPI.Entities;
-using PokemonGOAPI.Entities.Arguments.Responses;
+using PokemonGOAPI.Interfaces.Services;
+using System;
 
 namespace PokemonGOAPI.Controllers
 {
@@ -11,34 +9,40 @@ namespace PokemonGOAPI.Controllers
     [Route("[controller]")]
     public class PokemonMaximumCPController : ControllerBase
     {
+        #region Private Members
+
+        private readonly IPokemonMaximumCPService _pokemonMaximumCPService;
+
+        #endregion
+
+        #region Constructors
+
+        public PokemonMaximumCPController(IPokemonMaximumCPService pokemonMaximumCPService)
+        {
+            _pokemonMaximumCPService = pokemonMaximumCPService;
+        }
+
+        #endregion
+
+        #region Public Methods
+
         [HttpGet]
         public IActionResult Get()
         {
             try
             {
-                var resp = new PokemonMaximumCPResponse();
-                var client = new RestClient("https://pokemon-go1.p.rapidapi.com/pokemon_max_cp.json");
-
-                var request = new RestRequest(Method.GET);
-                request.BuildDefaultHeaders();
-
-                resp.PokemonMaximumCPList = client.Execute<List<PokemonMaximumCP>>(request).Data;
-
-                if (resp.PokemonMaximumCPList.Count == 0)
-                {
-                    resp.Message = "Nothing returned from the Pokemon Maximum CP list.";
-                    return StatusCode(500, resp);
-                }
-
-                resp.Success = true;
-                resp.Message = "Pokemon Maximum CP list retrieved succesfully!";
-                return Ok(resp);
-
+                var resp = _pokemonMaximumCPService.GetPokemonMaximumCP();
+                if (!resp.Success)
+                    return BadRequest(resp);
+                else
+                    return Ok(resp);
             }
             catch (Exception ex)
             {
                 return StatusCode(500, new DefaultResponse(false, ex.Message));
             }
         }
+
+        #endregion
     }
 }
