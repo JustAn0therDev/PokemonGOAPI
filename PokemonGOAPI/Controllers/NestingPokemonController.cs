@@ -1,10 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using Newtonsoft.Json;
-using Microsoft.AspNetCore.Mvc;
-using RestSharp;
-using PokemonGOAPI.Entities.Arguments.Responses;
+﻿using Microsoft.AspNetCore.Mvc;
 using PokemonGOAPI.Entities;
+using PokemonGOAPI.Interfaces.Services;
+using System;
 
 namespace PokemonGOAPI.Controllers
 {
@@ -12,27 +9,28 @@ namespace PokemonGOAPI.Controllers
     [Route("[controller]")]
     public class NestingPokemonController : ControllerBase
     {
+        #region Private Members
+        private readonly INestingPokemonService _nestingPokemonService;
+        #endregion
+
+        #region Constructors
+
+        public NestingPokemonController(INestingPokemonService nestingPokemonService)
+        {
+            _nestingPokemonService = nestingPokemonService;
+        }
+
+        #endregion
+
         [HttpGet]
         public IActionResult Get()
         {
             try
             {
-                var resp = new NestingPokemonResponse();
-                var client = new RestClient("https://pokemon-go1.p.rapidapi.com/nesting_pokemon.json");
+                var resp = _nestingPokemonService.GetNestingPokemon();
 
-                var request = new RestRequest(Method.GET);
-                request.BuildDefaultHeaders();
-
-                resp.NestingPokemon = client.Execute<Dictionary<string, List<NestingPokemon>>>(request).Data;
-
-                if (resp.NestingPokemon.Values.Count == 0)
-                {
-                    resp.Message = "Nothing was found in the request nesting pokemon list.";
-                    return NotFound(resp);
-                }
-
-                resp.Success = true;
-                resp.Message = "Nesting pokemon list found succesfully.";
+                if (!resp.Success)
+                    return BadRequest(resp);
                 return Ok(resp);
             }
             catch (Exception ex)

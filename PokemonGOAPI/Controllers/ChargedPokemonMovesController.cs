@@ -35,8 +35,8 @@ namespace PokemonGOAPI.Controllers
 
                 if (!resp.Success)
                     return BadRequest(resp);
-                else
-                    return Ok(resp);
+
+                return Ok(resp);
             }
             catch (Exception ex)
             {

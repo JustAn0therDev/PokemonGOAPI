@@ -1,7 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using PokemonGOAPI.Entities;
 using PokemonGOAPI.Interfaces.Services;
-using PokemonGOAPI.Services;
 using System;
 
 namespace PokemonGOAPI.Controllers
@@ -36,8 +35,8 @@ namespace PokemonGOAPI.Controllers
 
                 if (!resp.Success)
                     return BadRequest(resp);
-                else
-                    return Ok(resp);
+                    
+                return Ok(resp);
             }
             catch (Exception ex)
             {

@@ -25,6 +25,7 @@ namespace PokemonGOAPI
             //Dependency Injection
             services.AddSingleton<IPokemonStatsService, PokemonStatsService>();
             services.AddSingleton<IChargedPokemonMovesService, ChargedPokemonMovesService>();
+            services.AddSingleton<INestingPokemonService, NestingPokemonService>();
 
             services.AddMvc(option => option.EnableEndpointRouting = false)
                 .SetCompatibilityVersion(CompatibilityVersion.Version_3_0)
