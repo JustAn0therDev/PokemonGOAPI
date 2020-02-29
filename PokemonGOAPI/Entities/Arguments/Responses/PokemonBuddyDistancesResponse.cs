@@ -2,7 +2,7 @@
 using RestSharp.Deserializers;
 using PokemonGOAPI.Interfaces;
 
-namespace PokemonGOAPI.Entities.Arguments
+namespace PokemonGOAPI.Entities.Arguments.Responses
 {
     public class PokemonBuddyDistancesResponse : IResponse
     {

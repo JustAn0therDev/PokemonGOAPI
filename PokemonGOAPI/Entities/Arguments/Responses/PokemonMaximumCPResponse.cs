@@ -2,7 +2,7 @@
 using PokemonGOAPI.Interfaces;
 using System.Collections.Generic;
 
-namespace PokemonGOAPI.Entities.Arguments
+namespace PokemonGOAPI.Entities.Arguments.Responses
 {
     public class PokemonMaximumCPResponse : IResponse
     {

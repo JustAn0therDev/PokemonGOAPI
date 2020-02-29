@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using Microsoft.AspNetCore.Mvc;
 using PokemonGOAPI.Entities;
-using PokemonGOAPI.Entities.Arguments;
+using PokemonGOAPI.Entities.Arguments.Responses;
 using RestSharp;
 
 namespace PokemonGOAPI.Controllers

@@ -3,7 +3,7 @@ using System;
 using RestSharp;
 using System.Collections.Generic;
 using PokemonGOAPI.Entities;
-using PokemonGOAPI.Entities.Arguments;
+using PokemonGOAPI.Entities.Arguments.Responses;
 
 namespace PokemonGOAPI.Controllers
 {

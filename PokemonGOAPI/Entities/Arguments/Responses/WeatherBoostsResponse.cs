@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using PokemonGOAPI.Interfaces;
 
-namespace PokemonGOAPI.Entities.Arguments
+namespace PokemonGOAPI.Entities.Arguments.Responses
 {
     public class WeatherBoostsResponse : IResponse
     {

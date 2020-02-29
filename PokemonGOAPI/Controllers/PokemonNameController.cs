@@ -4,7 +4,7 @@ using System.Linq;
 using RestSharp;
 using Microsoft.AspNetCore.Mvc;
 using PokemonGOAPI.Entities;
-using PokemonGOAPI.Entities.Arguments;
+using PokemonGOAPI.Entities.Arguments.Responses;
 
 namespace PokemonGOAPI.Controllers
 {

@@ -1,4 +1,4 @@
-﻿namespace PokemonGOAPI.Entities.Arguments
+﻿namespace PokemonGOAPI.Entities.Arguments.Responses
 {
     public interface IPokemonResponse
     {

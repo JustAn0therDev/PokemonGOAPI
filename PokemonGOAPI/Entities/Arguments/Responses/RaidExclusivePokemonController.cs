@@ -3,7 +3,7 @@ using System;
 using System.Collections.Generic;
 using RestSharp;
 
-namespace PokemonGOAPI.Entities.Arguments
+namespace PokemonGOAPI.Entities.Arguments.Responses
 {
     [ApiController]
     [Route("[controller]")]

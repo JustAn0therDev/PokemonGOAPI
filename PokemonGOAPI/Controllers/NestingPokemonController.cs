@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using Newtonsoft.Json;
 using Microsoft.AspNetCore.Mvc;
 using RestSharp;
-using PokemonGOAPI.Entities.Arguments;
+using PokemonGOAPI.Entities.Arguments.Responses;
 using PokemonGOAPI.Entities;
 
 namespace PokemonGOAPI.Controllers

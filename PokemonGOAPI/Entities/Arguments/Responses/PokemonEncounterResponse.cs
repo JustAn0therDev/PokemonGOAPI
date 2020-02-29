@@ -2,7 +2,7 @@
 using PokemonGOAPI.Interfaces;
 using RestSharp.Deserializers;
 
-namespace PokemonGOAPI.Entities.Arguments
+namespace PokemonGOAPI.Entities.Arguments.Responses
 {
     public class PokemonEncounterResponse : IResponse
     {
