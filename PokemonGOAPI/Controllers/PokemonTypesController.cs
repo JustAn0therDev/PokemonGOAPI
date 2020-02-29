@@ -6,6 +6,7 @@ using RestSharp;
 using PokemonGOAPI.Entities;
 using PokemonGOAPI.Entities.Arguments.Responses;
 using Microsoft.AspNetCore.Mvc;
+using PokemonGOAPI.Interfaces.Services;
 
 namespace PokemonGOAPI.Controllers
 {
@@ -13,41 +14,32 @@ namespace PokemonGOAPI.Controllers
     [Route("[controller]")]
     public class PokemonTypesController : ControllerBase
     {
+        #region Private Members
+
+        private readonly IPokemonTypesService _pokemonTypesService;
+
+        #endregion
+
+        #region Constructors
+        public PokemonTypesController(IPokemonTypesService pokemonTypesService)
+        {
+            _pokemonTypesService = pokemonTypesService;
+        }
+
+        #endregion
+
+        #region Public Methods
+
         [HttpGet]
         public IActionResult Get([FromQuery]string pokemonName)
         {
             try
             {
-                var resp = new PokemonTypesResponse();
-                var client = new RestClient("https://pokemon-go1.p.rapidapi.com/pokemon_types.json");
+                var resp = _pokemonTypesService.GetPokemonTypes(pokemonName);
 
-                var request = new RestRequest(Method.GET);
-                request.BuildDefaultHeaders();
-                resp.PokemonTypes = client.Execute<List<PokemonType>>(request).Data;
+                if (!resp.Success)
+                    return BadRequest(resp);
 
-                if (resp.PokemonTypes.Count == 0)
-                {
-                    resp.Message = "Nothing was retrieved from the Pokemon types list.";
-                    return StatusCode(500, resp);
-                }
-
-                if(!string.IsNullOrEmpty(pokemonName))
-                {
-                    List<PokemonType> originalList = resp.PokemonTypes;
-                    resp.PokemonTypes = resp.PokemonTypes.Where(w => w.PokemonName.ToLower() == pokemonName.ToLower()).ToList();
-                    if (resp.PokemonTypes.Count == originalList.Count || resp.PokemonTypes.Count == 0)
-                    {
-                        resp.Message = "A filter on the pokemon types list could not be made. Did you mean to send something else?";
-                        resp.PokemonTypes = null;
-                        return BadRequest(resp);
-                    }
-                    resp.Success = true;
-                    resp.Message = "Pokemon types list filtered successfully.";
-                    return Ok(resp);
-                }
-
-                resp.Success = true;
-                resp.Message = "Pokemon Types list retrieved successfully.";
                 return Ok(resp);
             }
             catch (Exception ex)
@@ -55,5 +47,8 @@ namespace PokemonGOAPI.Controllers
                 return StatusCode(500, new DefaultResponse(false, ex.Message));
             }
         }
+
+        #endregion
+
     }
 }
