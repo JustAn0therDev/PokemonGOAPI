@@ -1,9 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using System;
-using RestSharp;
-using System.Collections.Generic;
 using PokemonGOAPI.Entities;
-using PokemonGOAPI.Entities.Arguments.Responses;
+using PokemonGOAPI.Interfaces.Services;
+using System;
 
 namespace PokemonGOAPI.Controllers
 {
@@ -11,47 +9,31 @@ namespace PokemonGOAPI.Controllers
     [Route("[controller]")]
     public class PokemonBuddyDistancesController : ControllerBase
     {
+        #region Private Members
+
+        private readonly IPokemonBuddyDistancesService _pokemonBuddyDistancesService;
+
+        #endregion
+
+        #region Constructors
+
+        public PokemonBuddyDistancesController(IPokemonBuddyDistancesService pokemonBuddyDistancesService)
+        {
+            _pokemonBuddyDistancesService = pokemonBuddyDistancesService;
+        }
+
+        #endregion
+
         [HttpGet]
         public IActionResult Get([FromQuery]string distanceInKm)
         {
             try
             {
-                var resp = new PokemonBuddyDistancesResponse();
-                var client = new RestClient("https://pokemon-go1.p.rapidapi.com/pokemon_buddy_distances.json");
+                var resp = _pokemonBuddyDistancesService.GetPokemonBuddyDistances(distanceInKm);
 
-                var request = new RestRequest(Method.GET);
-                request.BuildDefaultHeaders();
-
-                resp.PokemonBuddyDistances = client.Execute<Dictionary<string, List<PokemonBuddyDistance>>>(request).Data;
-
-                if (resp.PokemonBuddyDistances.Count == 0)
-                {
-                    resp.Message = "Nothing was retrieved from the pokemon buddy distance list.";
-                    return NotFound(resp);
-                }
-
-                if (!string.IsNullOrEmpty(distanceInKm))
-                {
-                    Dictionary<string, List<PokemonBuddyDistance>> originalList = resp.PokemonBuddyDistances;
-                    resp.PokemonBuddyDistances = resp.PokemonBuddyDistances.FilterPokemonBuddyDistancesBySearchAndValue(distanceInKm);
-
-                    if (resp.PokemonBuddyDistances.Count == originalList.Count || resp.PokemonBuddyDistances.Values.Count == 0)
-                    {
-                        resp.Message = $"No Pokemon that need {distanceInKm}KM in distance has been found. Did you mean to send something else?";
-                        resp.PokemonBuddyDistances = null;
-                        return BadRequest(resp);
-                    }
-                    resp.Success = true;
-                    resp.Message = $"A list of pokemon that need matching {distanceInKm}KM in distance has been retrieved successfully.";
-                    return Ok(resp);
-                }
-                else
-                {
-                    resp.Success = true;
-                    resp.Message = "Pokemon buddy distance list retrieved succesfully.";
-                    return Ok(resp);
-                }
-
+                if (!resp.Success)
+                    return BadRequest(resp);
+                return Ok(resp);
             }
             catch (Exception ex)
             {

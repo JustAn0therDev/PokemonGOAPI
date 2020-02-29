@@ -10,7 +10,9 @@ namespace PokemonGOAPI.Controllers
     public class NestingPokemonController : ControllerBase
     {
         #region Private Members
+
         private readonly INestingPokemonService _nestingPokemonService;
+
         #endregion
 
         #region Constructors
