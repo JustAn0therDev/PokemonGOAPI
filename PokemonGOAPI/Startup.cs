@@ -36,6 +36,7 @@ namespace PokemonGOAPI
             services.AddSingleton<IPokemonTypesService, PokemonTypesService>();
             services.AddSingleton<IPossibleDittoPokemonService, PossibleDittoPokemonService>();
             services.AddSingleton<IReleasedPokemonService, ReleasedPokemonService>();
+            services.AddSingleton<IWeatherBoostsService, WeatherBoostsService>();
 
             services.AddMvc(option => option.EnableEndpointRouting = false)
                 .SetCompatibilityVersion(CompatibilityVersion.Version_3_0)

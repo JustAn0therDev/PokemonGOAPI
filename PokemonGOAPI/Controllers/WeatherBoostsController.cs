@@ -1,11 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using PokemonGOAPI.Entities;
-using PokemonGOAPI.Entities.Arguments.Responses;
-using RestSharp;
+using PokemonGOAPI.Interfaces.Services;
+using System;
 
 namespace PokemonGOAPI.Controllers
 {
@@ -13,26 +9,33 @@ namespace PokemonGOAPI.Controllers
     [Route("[controller]")]
     public class WeatherBoostsController : ControllerBase
     {
+        #region Private Members
+
+        private readonly IWeatherBoostsService _weatherBoostsService;
+
+        #endregion
+
+        #region Constructors
+
+        public WeatherBoostsController(IWeatherBoostsService weatherBoostsService)
+        {
+            _weatherBoostsService = weatherBoostsService;
+        }
+
+        #endregion
+
+        #region Public Members
+
         [HttpGet]
         public IActionResult Get()
         {
             try
             {
-                var resp = new WeatherBoostsResponse();
-                var client = new RestClient("https://pokemon-go1.p.rapidapi.com/weather_boosts.json");
+                var resp = _weatherBoostsService.GetWeatherBoosts();
 
-                var request = new RestRequest(Method.GET);
-                request.BuildDefaultHeaders();
-                resp.WeatherBoosts = client.Execute<Dictionary<string, List<string>>>(request).Data;
+                if (!resp.Success)
+                    return BadRequest(resp);
 
-                if (resp.WeatherBoosts.Count == 0)
-                {
-                    resp.Message = "Nothing returned from the weather boosts list.";
-                    return StatusCode(500, resp);
-                }
-
-                resp.Success = true;
-                resp.Message = "Weather boosts list retrived successfully.";
                 return Ok(resp);
             }
             catch (Exception ex)
@@ -40,5 +43,7 @@ namespace PokemonGOAPI.Controllers
                 return StatusCode(500, new DefaultResponse(false, ex.Message));
             }
         }
+
+        #endregion
     }
 }
