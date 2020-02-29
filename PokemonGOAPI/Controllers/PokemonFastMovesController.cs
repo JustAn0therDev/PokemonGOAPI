@@ -1,9 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using PokemonGOAPI.Entities;
-using PokemonGOAPI.Entities.Arguments.Responses;
-using RestSharp;
+using PokemonGOAPI.Interfaces.Services;
+using System;
 
 namespace PokemonGOAPI.Controllers
 {
@@ -11,27 +9,33 @@ namespace PokemonGOAPI.Controllers
     [Route("[controller]")]
     public class PokemonFastMovesController : ControllerBase
     {
+        #region Private Members
+
+        private readonly IPokemonFastMovesService _pokemonFastMovesService;
+
+        #endregion
+
+        #region Constructors
+
+        public PokemonFastMovesController(IPokemonFastMovesService pokemonFastMovesService)
+        {
+            _pokemonFastMovesService = pokemonFastMovesService;
+        }
+
+        #endregion
+
+        #region Public Methods
+
         [HttpGet]
         public IActionResult Get()
         {
             try
             {
-                var resp = new PokemonFastMovesResponse();
-                var client = new RestClient("https://pokemon-go1.p.rapidapi.com/fast_moves.json");
+                var resp = _pokemonFastMovesService.GetPokemonFastMoves();
 
-                var request = new RestRequest(Method.GET);
-                request.BuildDefaultHeaders();
+                if (!resp.Success)
+                    return BadRequest(resp);
 
-                resp.PokemonFastMoves = client.Execute<List<PokemonFastMoves>>(request).Data;
-
-                if (resp.PokemonFastMoves.Count == 0)
-                {
-                    resp.Message = "Nothing returned from the Pokemon fast moves list.";
-                    return StatusCode(500, resp);
-                }
-
-                resp.Success = true;
-                resp.Message = "Pokemon fast moves list returned successfully.";
                 return Ok(resp);
             }
             catch (Exception ex)
@@ -39,5 +43,7 @@ namespace PokemonGOAPI.Controllers
                 return StatusCode(500, new DefaultResponse(false, ex.Message));
             }
         }
+
+        #endregion
     }
 }
