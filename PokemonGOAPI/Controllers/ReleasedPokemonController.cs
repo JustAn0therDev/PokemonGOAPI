@@ -1,11 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using PokemonGOAPI.Entities;
-using PokemonGOAPI.Entities.Arguments.Responses;
-using RestSharp;
+using PokemonGOAPI.Interfaces.Services;
+using System;
 
 namespace PokemonGOAPI.Controllers
 {
@@ -13,27 +9,33 @@ namespace PokemonGOAPI.Controllers
     [Route("[controller]")]
     public class ReleasedPokemonController : ControllerBase
     {
+        #region Private Members
+
+        private readonly IReleasedPokemonService _releasedPokemonService;
+
+        #endregion
+
+        #region MyRegion
+
+        public ReleasedPokemonController(IReleasedPokemonService releasedPokemonService)
+        {
+            _releasedPokemonService = releasedPokemonService;
+        }
+
+        #endregion
+
+        #region Public Methods
+
         [HttpGet]
         public IActionResult Get()
         {
             try
             {
-                var resp = new ReleasedPokemonResponse();
+                var resp = _releasedPokemonService.GetReleasedPokemonResponse();
 
-                var client = new RestClient("https://pokemon-go1.p.rapidapi.com/released_pokemon.json");
-                var request = new RestRequest(Method.GET);
-                request.BuildDefaultHeaders();
+                if (!resp.Success)
+                    return BadRequest(resp);
 
-                resp.ReleasedPokemon = client.Execute<Dictionary<string, List<PokemonNameObject>>>(request).Data;
-
-                if (resp.ReleasedPokemon.Count == 0)
-                {
-                    resp.Message = "Nothing returned from the released pokemon list.";
-                    return StatusCode(500, resp);
-                }
-
-                resp.Success = true;
-                resp.Message = "Released pokemon list returned successfully.";
                 return Ok(resp);
             }
             catch (Exception ex)
@@ -41,5 +43,7 @@ namespace PokemonGOAPI.Controllers
                 return StatusCode(500, new DefaultResponse(false, ex.Message));
             }
         }
+
+        #endregion
     }
 }
