@@ -23,7 +23,8 @@
       "launchUrl": "pokemonstats",
       "applicationUrl": "https://localhost:5001;http://localhost:5000",
       "environmentVariables": {
-        "ASPNETCORE_ENVIRONMENT": "Development"
+        "ASPNETCORE_ENVIRONMENT": "Development",
+        "XRAPIDAPIKEY": "4d05572d05msh8850743a12d5d73p17280fjsn86033a0fdb9a"
       }
     }
   }
