@@ -32,6 +32,7 @@ namespace PokemonGOAPI
             services.AddSingleton<IPokemonFastMovesService, PokemonFastMovesService>();
             services.AddSingleton<IPokemonMaximumCPService, PokemonMaximumCPService>();
             services.AddSingleton<IPokemonNameService, PokemonNameService>();
+            services.AddSingleton<IPokemonShinyService, PokemonShinyService>();
 
             services.AddMvc(option => option.EnableEndpointRouting = false)
                 .SetCompatibilityVersion(CompatibilityVersion.Version_3_0)

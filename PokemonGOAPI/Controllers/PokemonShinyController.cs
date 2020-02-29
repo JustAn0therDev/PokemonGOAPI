@@ -1,9 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using PokemonGOAPI.Entities;
-using PokemonGOAPI.Entities.Arguments.Responses;
-using RestSharp;
+using PokemonGOAPI.Interfaces.Services;
+using System;
 
 namespace PokemonGOAPI.Controllers
 {
@@ -11,35 +9,43 @@ namespace PokemonGOAPI.Controllers
     [Route("[controller]")]
     public class PokemonShinyController : ControllerBase
     {
+        #region Private Members
+
+        private readonly IPokemonShinyService _pokemonShinyService;
+
+        #endregion
+
+        #region Constructors
+
+        public PokemonShinyController(IPokemonShinyService pokemonShinyService)
+        {
+            _pokemonShinyService = pokemonShinyService;
+        }
+
+        #endregion
+
+        #region Public Members
+
         [HttpGet]
         public IActionResult Get()
         {
             try
             {
-                var resp = new PokemonShinyResponse();
-                var client = new RestClient("https://pokemon-go1.p.rapidapi.com/shiny_pokemon.json");
+                var resp = _pokemonShinyService.GetPokemonShiny();
 
-                var request = new RestRequest(Method.GET);
-                request.BuildDefaultHeaders();
+                if (!resp.Success)
+                    return BadRequest(resp);
 
-                resp.PokemonShinyList = client.Execute<Dictionary<string, List<PokemonShiny>>>(request).Data;
-
-                if(resp.PokemonShinyList.Count == 0)
-                {
-                    resp.Message = "Nothing returned from the Pokemon Shiny list.";
-                    return StatusCode(500, resp);
-                }
-
-                resp.Success = true;
-                resp.Message = "Pokemon Shiny list returned successfully.";
                 return Ok(resp);
-
             }
             catch (Exception ex)
             {
                 return StatusCode(500, new DefaultResponse(false, ex.Message));
             }
         }
+
+        #endregion
+
     }
 
 }
