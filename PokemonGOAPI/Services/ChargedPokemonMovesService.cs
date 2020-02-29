@@ -14,7 +14,7 @@ namespace PokemonGOAPI.Services
             var checkParameters = PokemonExtensions.CheckSearchByAndValue(searchBy, value);
             if (checkParameters != null)
             {
-                resp.Message = "A request cannot me made by passing only one of the two parameters";
+                resp.Message = "Cannot filter a pokemon stat without both required values.";
                 return resp;
             }
 

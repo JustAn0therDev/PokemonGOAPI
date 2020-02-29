@@ -27,6 +27,8 @@ namespace PokemonGOAPI
             services.AddSingleton<IChargedPokemonMovesService, ChargedPokemonMovesService>();
             services.AddSingleton<INestingPokemonService, NestingPokemonService>();
             services.AddSingleton<IPokemonBuddyDistancesService, PokemonBuddyDistancesService>();
+            services.AddSingleton<IPokemonEncounterService, PokemonEncounterService>();
+            services.AddSingleton<IPokemonCandyService, PokemonCandyService>();
 
             services.AddMvc(option => option.EnableEndpointRouting = false)
                 .SetCompatibilityVersion(CompatibilityVersion.Version_3_0)
