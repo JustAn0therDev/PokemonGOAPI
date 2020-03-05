@@ -1,12 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using PokemonGOAPI.Entities;
-using PokemonGOAPI.Entities.Arguments.Responses;
 using PokemonGOAPI.Interfaces.Services;
-using RestSharp;
+using System;
 
 namespace PokemonGOAPI.Controllers
 {
