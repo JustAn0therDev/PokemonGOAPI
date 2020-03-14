@@ -26,7 +26,7 @@ namespace PokemonGOAPI.Services
 
             resp.PokemonEncounters = client.Execute<List<PokemonEncounter>>(request).Data;
 
-            if (resp.PokemonEncounters.Count == 0)
+            if (resp.PokemonEncounters != null && resp.PokemonEncounters.Count == 0)
             {
                 resp.Message = "Nothing returned from the Pokemon Encounter list.";
                 return resp;

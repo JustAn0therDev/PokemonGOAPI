@@ -18,7 +18,7 @@ namespace PokemonGOAPI.Services
 
             resp.PokemonMaximumCPList = client.Execute<List<PokemonMaximumCP>>(request).Data;
 
-            if (resp.PokemonMaximumCPList.Count == 0)
+            if (resp.PokemonMaximumCPList != null && resp.PokemonMaximumCPList.Count == 0)
             {
                 resp.Message = "Nothing returned from the Pokemon Maximum CP list.";
                 return resp;

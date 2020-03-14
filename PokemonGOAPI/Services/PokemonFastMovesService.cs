@@ -18,7 +18,7 @@ namespace PokemonGOAPI.Services
 
             resp.PokemonFastMoves = client.Execute<List<PokemonFastMoves>>(request).Data;
 
-            if (resp.PokemonFastMoves.Count == 0)
+            if (resp.PokemonFastMoves != null && resp.PokemonFastMoves.Count == 0)
             {
                 resp.Message = "Nothing returned from the Pokemon fast moves list.";
                 return resp;

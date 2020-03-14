@@ -17,7 +17,7 @@ namespace PokemonGOAPI.Services
             request.BuildDefaultHeaders();
             resp.WeatherBoosts = client.Execute<Dictionary<string, List<string>>>(request).Data;
 
-            if (resp.WeatherBoosts.Count == 0)
+            if (resp.WeatherBoosts != null && resp.WeatherBoosts.Count == 0)
             {
                 resp.Message = "Nothing returned from the weather boosts list.";
                 return resp;

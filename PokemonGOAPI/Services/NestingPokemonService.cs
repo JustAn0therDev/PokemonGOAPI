@@ -18,7 +18,7 @@ namespace PokemonGOAPI.Services
 
             resp.NestingPokemon = client.Execute<Dictionary<string, List<NestingPokemon>>>(request).Data;
 
-            if (resp.NestingPokemon.Values.Count == 0)
+            if (resp.NestingPokemon != null && resp.NestingPokemon.Values.Count == 0)
             {
                 resp.Message = "Nothing was found in the request nesting pokemon list.";
                 return resp;

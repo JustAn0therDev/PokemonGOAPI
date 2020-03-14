@@ -18,7 +18,7 @@ namespace PokemonGOAPI.Services
             request.BuildDefaultHeaders();
             resp.PokemonTypes = client.Execute<List<PokemonType>>(request).Data;
 
-            if (resp.PokemonTypes.Count == 0)
+            if (resp.PokemonTypes != null && resp.PokemonTypes.Count == 0)
             {
                 resp.Message = "Nothing was retrieved from the Pokemon types list.";
                 return resp;

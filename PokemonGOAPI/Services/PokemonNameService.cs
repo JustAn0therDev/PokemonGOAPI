@@ -18,7 +18,7 @@ namespace PokemonGOAPI.Services
 
             resp.PokemonNames = client.Execute<Dictionary<string, List<PokemonNameObject>>>(request).Data;
 
-            if (resp.PokemonNames.Count == 0)
+            if (resp.PokemonNames != null && resp.PokemonNames.Count == 0)
             {
                 resp.Message = "Nothing returned from the Pokemon Name list.";
                 return resp;

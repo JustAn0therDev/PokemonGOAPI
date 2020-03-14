@@ -18,7 +18,7 @@ namespace PokemonGOAPI.Services
 
             resp.PossibleDittoPokemon = client.Execute<Dictionary<string, List<PokemonNameObject>>>(request).Data;
 
-            if (resp.PossibleDittoPokemon.Count == 0)
+            if (resp.PossibleDittoPokemon != null && resp.PossibleDittoPokemon.Count == 0)
             {
                 resp.Message = "Nothing returned from the Possible Ditto Pokemon list.";
                 return resp;

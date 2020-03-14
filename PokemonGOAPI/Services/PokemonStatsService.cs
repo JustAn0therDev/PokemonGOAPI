@@ -28,7 +28,7 @@ namespace PokemonGOAPI.Services
 
             response.PokemonData = client.Execute<List<PokemonData>>(request).Data;
 
-            if (response.PokemonData.Count == 0)
+            if (response.PokemonData != null && response.PokemonData.Count == 0)
             {
                 response.Message = "Nothing returned from the Pokemon Stats list.";
                 return response;

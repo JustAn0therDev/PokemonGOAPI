@@ -25,7 +25,7 @@ namespace PokemonGOAPI.Services
 
             resp.ChargedPokemonMoves = client.Execute<List<ChargedPokemonMove>>(request).Data;
 
-            if (resp.ChargedPokemonMoves.Count == 0)
+            if (resp.ChargedPokemonMoves != null && resp.ChargedPokemonMoves.Count == 0)
             {
                 resp.Message = "Nothing from the charged pokemon moves list has been retrieved.";
                 return resp;

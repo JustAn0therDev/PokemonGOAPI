@@ -18,7 +18,7 @@ namespace PokemonGOAPI.Services
 
             resp.PokemonBuddyDistances = client.Execute<Dictionary<string, List<PokemonBuddyDistance>>>(request).Data;
 
-            if (resp.PokemonBuddyDistances.Count == 0)
+            if (resp.PokemonBuddyDistances != null && resp.PokemonBuddyDistances.Count == 0)
             {
                 resp.Message = "Nothing was retrieved from the pokemon buddy distance list.";
                 return resp;
@@ -39,12 +39,10 @@ namespace PokemonGOAPI.Services
                 resp.Message = $"A list of pokemon that need matching {distanceInKm}KM in distance has been retrieved successfully.";
                 return resp;
             }
-            else
-            {
-                resp.Success = true;
-                resp.Message = "Pokemon buddy distance list retrieved succesfully.";
-                return resp;
-            }
+
+            resp.Success = true;
+            resp.Message = "Pokemon buddy distance list retrieved succesfully.";
+            return resp;
         }
     }
 }

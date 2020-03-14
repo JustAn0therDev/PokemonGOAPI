@@ -20,7 +20,7 @@ namespace PokemonGOAPI.Services
 
             result.AllPokemonCandy = client.Execute<Dictionary<string, List<PokemonCandy>>>(request).Data;
 
-            if (result.AllPokemonCandy.Count == 0)
+            if (result.AllPokemonCandy != null && result.AllPokemonCandy.Count == 0)
             {
                 result.Message = "Nothing returned from the Pokemon Candy list.";
                 return result;
@@ -41,6 +41,7 @@ namespace PokemonGOAPI.Services
                 result.Message = $"List of Pokemon that need {numberOfCandies} candies to evolve retrieved successfully!";
                 return result;
             }
+
             result.Success = true;
             result.Message = "Pokemon Candy list returned successfully.";
             return result;

@@ -18,7 +18,7 @@ namespace PokemonGOAPI.Services
 
             resp.PokemonShinyList = client.Execute<Dictionary<string, List<PokemonShiny>>>(request).Data;
 
-            if (resp.PokemonShinyList.Count == 0)
+            if (resp.PokemonShinyList != null && resp.PokemonShinyList.Count == 0)
             {
                 resp.Message = "Nothing returned from the Pokemon Shiny list.";
                 return resp;
