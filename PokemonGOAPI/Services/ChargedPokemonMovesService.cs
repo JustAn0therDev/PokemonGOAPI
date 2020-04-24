@@ -1,5 +1,6 @@
 ﻿using PokemonGOAPI.Entities.Arguments.Responses;
 using PokemonGOAPI.Interfaces.Services;
+using PokemonGOAPI.Utils;
 using RestSharp;
 using System;
 using System.Collections.Generic;
@@ -8,47 +9,60 @@ namespace PokemonGOAPI.Services
 {
     public class ChargedPokemonMovesService : IChargedPokemonMovesService
     {
+        public RestClient RestClient { get; set; } = new RestClient("https://pokemon-go1.p.rapidapi.com/charged_moves.json");
+        public RestRequest RestRequest { get; set; }
+
         public ChargedPokemonMovesResponse GetChargedPokemonMoves(string searchBy, string value)
         {
-            var resp = new ChargedPokemonMovesResponse();
-            var checkParameters = PokemonExtensions.CheckSearchByAndValue(searchBy, value);
-            if (checkParameters != null)
+            RestRequest = new RestRequest();
+            RestRequest.BuildDefaultHeaders();
+
+            bool argumentsAreNotValid = CheckIfReceivedArgumentsAreNotValid(searchBy, value);
+            if (argumentsAreNotValid)
+                return ResponseFactory<ChargedPokemonMovesResponse>.BothRequiredValuesForFilteringWereNotProvided();
+
+            List<ChargedPokemonMove> chargedPokemonMoves = RestClient.Execute<List<ChargedPokemonMove>>(RestRequest)?.Data;
+
+            if (chargedPokemonMoves == null || chargedPokemonMoves.Count == 0)
+                return ResponseFactory<ChargedPokemonMovesResponse>.NothingReturnedFromTheRequestedList();
+
+            if (IfArgumentsAreValidAndNotEmpty(searchBy, value))
             {
-                resp.Message = "Cannot filter a pokemon stat without both required values.";
-                return resp;
+                List<ChargedPokemonMove> originalListFromRequestToCompareAfterFiltering = chargedPokemonMoves;
+                chargedPokemonMoves = chargedPokemonMoves.FilterChargedPokemonMovesList(searchBy, value);
+
+                if (chargedPokemonMoves.Count == 0 || chargedPokemonMoves.Count == originalListFromRequestToCompareAfterFiltering.Count)
+                    return ResponseFactory<ChargedPokemonMovesResponse>.ListFilteringDidntWork();
+
+                return ChargedPokemonMovesListWasFilteredSuccessfully(chargedPokemonMoves);
             }
+            return ChargedPokemonMovesListWasRetrievedSuccessfully(chargedPokemonMoves);
+        }
 
-            var client = new RestClient("https://pokemon-go1.p.rapidapi.com/charged_moves.json");
+        private bool CheckIfReceivedArgumentsAreNotValid(string searchBy, string value) 
+            => PokemonUtils.CheckSearchByAndValue(searchBy, value) != null ? true : false;
 
-            var request = new RestRequest(Method.GET);
-            request.BuildDefaultHeaders();
+        private bool IfArgumentsAreValidAndNotEmpty(string searchBy, string value)
+            => !string.IsNullOrWhiteSpace(searchBy) && !string.IsNullOrWhiteSpace(value);
 
-            resp.ChargedPokemonMoves = client.Execute<List<ChargedPokemonMove>>(request).Data;
-
-            if (resp.ChargedPokemonMoves != null && resp.ChargedPokemonMoves.Count == 0)
+        private ChargedPokemonMovesResponse ChargedPokemonMovesListWasFilteredSuccessfully(List<ChargedPokemonMove> chargedPokemonMoves)
+        {
+            return new ChargedPokemonMovesResponse
             {
-                resp.Message = "Nothing from the charged pokemon moves list has been retrieved.";
-                return resp;
-            }
+                Success = true,
+                Message = "Charged Pokemon Moves list filtered successfully.",
+                ChargedPokemonMoves = chargedPokemonMoves
+            };
+        }
 
-            if (!string.IsNullOrEmpty(searchBy))
+        private ChargedPokemonMovesResponse ChargedPokemonMovesListWasRetrievedSuccessfully(List<ChargedPokemonMove> chargedPokemonMoves)
+        {
+            return new ChargedPokemonMovesResponse
             {
-                List<ChargedPokemonMove> originalList = resp.ChargedPokemonMoves;
-                resp.ChargedPokemonMoves = resp.ChargedPokemonMoves.FilterChargedPokemonMovesList(searchBy, value);
-                if (resp.ChargedPokemonMoves.Count == originalList.Count || resp.ChargedPokemonMoves.Count == 0)
-                {
-                    resp.Message = "No filter could be made by using the provided parameters. Did you mean to send something else?";
-                    resp.ChargedPokemonMoves = null;
-                    return resp;
-                }
-                resp.Success = true;
-                resp.Message = "Charged Pokemon Moves list filtered successfully.";
-                return resp;
-            }
-
-            resp.Success = true;
-            resp.Message = "Charged Pokemon Moves list retrieved successfully.";
-            return resp;
+                Success = true,
+                Message = "Charged Pokemon Moves list retrieved successfully.",
+                ChargedPokemonMoves = chargedPokemonMoves
+            };
         }
     }
 }

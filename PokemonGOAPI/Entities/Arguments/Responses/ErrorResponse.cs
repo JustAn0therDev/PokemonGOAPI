@@ -2,7 +2,7 @@
 
 namespace PokemonGOAPI.Entities
 {
-    public class DefaultResponse : IResponse
+    public class ErrorResponse : IResponse
     {
         #region Public Members
 
@@ -13,7 +13,7 @@ namespace PokemonGOAPI.Entities
 
         #region Constructors
         
-        public DefaultResponse(bool success, string message)
+        public ErrorResponse(bool success, string message)
         {
             Success = success;
             Message = message;

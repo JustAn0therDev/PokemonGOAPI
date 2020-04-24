@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using PokemonGOAPI.Entities;
+using PokemonGOAPI.Interfaces;
 using PokemonGOAPI.Interfaces.Services;
 using System;
 
@@ -31,16 +32,14 @@ namespace PokemonGOAPI.Controllers
         {
             try
             {
-                var resp = _chargedPokemonMovesService.GetChargedPokemonMoves(searchBy, value);
-
+                IResponse resp = _chargedPokemonMovesService.GetChargedPokemonMoves(searchBy, value);
                 if (!resp.Success)
                     return BadRequest(resp);
-
                 return Ok(resp);
             }
             catch (Exception ex)
             {
-                return StatusCode(500, new DefaultResponse(false, ex.Message));
+                return StatusCode(500, new ErrorResponse(false, ex.Message));
             }
         }
 

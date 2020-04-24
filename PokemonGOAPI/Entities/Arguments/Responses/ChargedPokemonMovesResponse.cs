@@ -8,7 +8,7 @@ namespace PokemonGOAPI.Entities.Arguments.Responses
     {
         public bool Success { get; set; }
         public string Message { get; set; }
-        public List<ChargedPokemonMove> ChargedPokemonMoves { get; set; } = new List<ChargedPokemonMove>();
+        public List<ChargedPokemonMove> ChargedPokemonMoves { get; set; }
     }
 
     public class ChargedPokemonMove

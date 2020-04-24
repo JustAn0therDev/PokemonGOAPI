@@ -35,7 +35,7 @@ namespace PokemonGOAPI.Entities.Arguments.Responses
             }
             catch (Exception ex)
             {
-                return StatusCode(500, new DefaultResponse(false, ex.Message));
+                return StatusCode(500, new ErrorResponse(false, ex.Message));
             }
         }
 

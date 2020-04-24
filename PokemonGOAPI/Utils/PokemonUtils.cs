@@ -6,7 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace System
 {
-    public static class PokemonExtensions
+    public static class PokemonUtils
     {
         public static List<PokemonData> FilterPokemonList(this List<PokemonData> pokemonData, string searchBy, string value)
         {
@@ -122,7 +122,7 @@ namespace System
                     return pokemonData.Where(w => w.PokemonId == Convert.ToInt32(value)).ToList();
                 case "pokemon_name":
                     return pokemonData.Where(w => w.PokemonName.ToLower() == value.ToLower()).ToList();
-                default:    
+                default:
                     return pokemonData;
             }
         }
@@ -130,11 +130,12 @@ namespace System
         public static ObjectResult CheckSearchByAndValue(string searchBy, string value)
         {
             if (string.IsNullOrEmpty(searchBy) && !string.IsNullOrEmpty(value))
-                return new ObjectResult(new DefaultResponse(false, "A request cannot be made by sending a value without a key"));
-            else if (string.IsNullOrEmpty(value) && !string.IsNullOrEmpty(searchBy))
-                return new ObjectResult(new DefaultResponse(false, "A request cannot be made by sending a key without a value"));
-            else
-                return null;
+                return new ObjectResult(new object());
+
+            if (string.IsNullOrEmpty(value) && !string.IsNullOrEmpty(searchBy))
+                return new ObjectResult(new object());
+
+            return null;
         }
     }
 }

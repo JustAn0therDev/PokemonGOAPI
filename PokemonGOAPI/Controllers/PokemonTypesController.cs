@@ -39,7 +39,7 @@ namespace PokemonGOAPI.Controllers
             }
             catch (Exception ex)
             {
-                return StatusCode(500, new DefaultResponse(false, ex.Message));
+                return StatusCode(500, new ErrorResponse(false, ex.Message));
             }
         }
 

@@ -10,7 +10,7 @@ namespace PokemonGOAPI.Services
     {
         public PokemonStatsResponse GetPokemonStats(string searchBy, string value)
         {
-            var parameterCheck = PokemonExtensions.CheckSearchByAndValue(searchBy, value);
+            var parameterCheck = PokemonUtils.CheckSearchByAndValue(searchBy, value);
             if (parameterCheck != null)
                 return null;
 

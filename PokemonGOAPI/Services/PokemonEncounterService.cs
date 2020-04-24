@@ -12,7 +12,7 @@ namespace PokemonGOAPI.Services
         {
             var resp = new PokemonEncounterResponse();
 
-            var checkParameters = PokemonExtensions.CheckSearchByAndValue(searchBy, value);
+            var checkParameters = PokemonUtils.CheckSearchByAndValue(searchBy, value);
             if (checkParameters != null)
             {
                 resp.Message = "Cannot filter a pokemon stat without both required values.";
