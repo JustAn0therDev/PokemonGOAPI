@@ -1,11 +1,8 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
 using Microsoft.AspNetCore.Mvc;
 using PokemonGOAPI.Entities;
-using PokemonGOAPI.Entities.Arguments.Responses;
+using PokemonGOAPI.Interfaces;
 using PokemonGOAPI.Interfaces.Services;
-using RestSharp;
 
 namespace PokemonGOAPI.Controllers
 {
@@ -35,8 +32,7 @@ namespace PokemonGOAPI.Controllers
         {
             try
             {
-                var resp = _pokemonCandyService.GetPokemonCandy(numberOfCandies);
-
+                IResponse resp = _pokemonCandyService.GetPokemonCandy(numberOfCandies);
                 if (!resp.Success)
                     return BadRequest(resp);
                 return Ok(resp);

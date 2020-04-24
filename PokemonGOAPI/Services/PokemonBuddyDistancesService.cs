@@ -47,7 +47,7 @@ namespace PokemonGOAPI.Services
         private PokemonBuddyDistancesResponse ListWasRetrivedSuccessfully(Dictionary<string, List<PokemonBuddyDistance>> pokemonBuddyDistances) {
             return new PokemonBuddyDistancesResponse {
                 Success = true,
-                Message = "Pokemon buddy distance list retrieved succesfully.",
+                Message = "Pokemon buddy distance list retrieved successfully.",
                 PokemonBuddyDistances = pokemonBuddyDistances
             };
         }

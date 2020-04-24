@@ -1,50 +1,52 @@
 ﻿using PokemonGOAPI.Entities.Arguments.Responses;
 using PokemonGOAPI.Interfaces.Services;
+using PokemonGOAPI.Utils;
 using RestSharp;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace PokemonGOAPI.Services
 {
-    public class PokemonCandyService : IPokemonCandyService
+    public class PokemonCandyService : BaseService, IPokemonCandyService
     {
+        public override RestClient RestClient {
+            get => new RestClient("https://pokemon-go1.p.rapidapi.com/pokemon_candy_to_evolve.json");
+        }
         public PokemonCandyResponse GetPokemonCandy(string numberOfCandies)
         {
-            var result = new PokemonCandyResponse();
-            var client = new RestClient("https://pokemon-go1.p.rapidapi.com/pokemon_candy_to_evolve.json");
+            Dictionary<string, List<PokemonCandy>> allPokemonCandy = new Dictionary<string, List<PokemonCandy>>();
+            allPokemonCandy = RestClient.Execute<Dictionary<string, List<PokemonCandy>>>(RestRequest)?.Data;
 
-            var request = new RestRequest();
-            request.BuildDefaultHeaders();
+            if (allPokemonCandy == null || (allPokemonCandy != null && allPokemonCandy.Count == 0))
+                return ResponseFactory<PokemonCandyResponse>.NothingReturnedFromTheRequestedList();
 
-            result.AllPokemonCandy = client.Execute<Dictionary<string, List<PokemonCandy>>>(request).Data;
-
-            if (result.AllPokemonCandy != null && result.AllPokemonCandy.Count == 0)
+            if (NumberOfCandiesWasProvided(numberOfCandies))
             {
-                result.Message = "Nothing returned from the Pokemon Candy list.";
-                return result;
+                Dictionary<string, List<PokemonCandy>> originalListForComparisonAfterFiltering = allPokemonCandy;
+                allPokemonCandy = allPokemonCandy.FilterPokemonListByNumberOfCandiesAndGroupByPokemonId(numberOfCandies);
+
+                if (allPokemonCandy.Count == originalListForComparisonAfterFiltering.Count || allPokemonCandy.Count == 0)
+                    return ResponseFactory<PokemonCandyResponse>.ListFilteringDidntWork();
+
+                return ListWasFilteredSuccessfully(allPokemonCandy);
             }
-
-            if (!string.IsNullOrEmpty(numberOfCandies))
-            {
-                Dictionary<string, List<PokemonCandy>> originalList = result.AllPokemonCandy;
-                result.AllPokemonCandy = result.AllPokemonCandy.FilterPokemonListByNumberOfCandiesAndGroupByPokemonId(numberOfCandies);
-
-                if (result.AllPokemonCandy.Count == originalList.Count || result.AllPokemonCandy.Count == 0)
-                {
-                    result.Message = "A filter using the sent parameters could not be made, did you mean to send something else?";
-                    result.AllPokemonCandy = null;
-                    return result;
-                }
-                result.Success = true;
-                result.Message = $"List of Pokemon that need {numberOfCandies} candies to evolve retrieved successfully!";
-                return result;
-            }
-
-            result.Success = true;
-            result.Message = "Pokemon Candy list returned successfully.";
-            return result;
+            return ListWasRetrivedSuccessfully(allPokemonCandy);
         }
+
+        private bool NumberOfCandiesWasProvided(string numberOfCandies) => !string.IsNullOrEmpty(numberOfCandies);
+
+        private PokemonCandyResponse ListWasFilteredSuccessfully(Dictionary<string, List<PokemonCandy>> allPokemonCandy) 
+            => new PokemonCandyResponse {
+                Success = true,
+                Message = $"List of pokemon candy retrieved successfully.",
+                AllPokemonCandy = allPokemonCandy
+            };
+
+        private PokemonCandyResponse ListWasRetrivedSuccessfully(Dictionary<string, List<PokemonCandy>> allPokemonCandy) 
+            => new PokemonCandyResponse {
+                Success = true,
+                Message = "List of pokemon candy retrieved successfully.",
+                AllPokemonCandy = allPokemonCandy
+            };
     }
 }
