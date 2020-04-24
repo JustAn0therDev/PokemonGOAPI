@@ -26,7 +26,7 @@ namespace PokemonGOAPI.Services
             if (chargedPokemonMoves == null || chargedPokemonMoves.Count == 0)
                 return ResponseFactory<ChargedPokemonMovesResponse>.NothingReturnedFromTheRequestedList();
 
-            if (IfArgumentsAreValidAndNotEmpty(searchBy, value))
+            if (ArgumentsAreValidAndNotEmpty(searchBy, value))
             {
                 List<ChargedPokemonMove> originalListFromRequestToCompareAfterFiltering = chargedPokemonMoves;
                 chargedPokemonMoves = chargedPokemonMoves.FilterChargedPokemonMovesList(searchBy, value);
@@ -42,7 +42,7 @@ namespace PokemonGOAPI.Services
         private bool CheckIfReceivedArgumentsAreNotValid(string searchBy, string value) 
             => PokemonUtils.CheckSearchByAndValue(searchBy, value) != null ? true : false;
 
-        private bool IfArgumentsAreValidAndNotEmpty(string searchBy, string value)
+        private bool ArgumentsAreValidAndNotEmpty(string searchBy, string value)
             => !string.IsNullOrWhiteSpace(searchBy) && !string.IsNullOrWhiteSpace(value);
 
         private ChargedPokemonMovesResponse ChargedPokemonMovesListWasFilteredSuccessfully(List<ChargedPokemonMove> chargedPokemonMoves)
