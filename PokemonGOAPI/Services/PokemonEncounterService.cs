@@ -20,7 +20,7 @@ namespace PokemonGOAPI.Services
             if (IfReceivedArgumentsAreNotValid(searchBy, value))
                 return ResponseFactory<PokemonEncounterResponse>.BothRequiredValuesForFilteringWereNotProvided();
 
-            pokemonEncounters = RestClient.Execute<List<PokemonEncounter>>(RestRequest).Data;
+            pokemonEncounters = RestClient.Execute<List<PokemonEncounter>>(RestRequest)?.Data;
 
             if (pokemonEncounters == null || (pokemonEncounters != null && pokemonEncounters.Count == 0))
                 return ResponseFactory<PokemonEncounterResponse>.NothingReturnedFromTheRequestedList();
@@ -44,7 +44,6 @@ namespace PokemonGOAPI.Services
                     Message = "Pokemon encounters list filtered successfully.",
                     PokemonEncounters = pokemonEncounters
                 };
-        
 
         private PokemonEncounterResponse ListWasRetrivedSuccessfully(List<PokemonEncounter> pokemonEncounters) 
             => new PokemonEncounterResponse {
