@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using PokemonGOAPI.Entities;
+using PokemonGOAPI.Interfaces;
 using PokemonGOAPI.Interfaces.Services;
 using System;
 
@@ -29,8 +30,7 @@ namespace PokemonGOAPI.Controllers
         {
             try
             {
-                var resp = _pokemonBuddyDistancesService.GetPokemonBuddyDistances(distanceInKm);
-
+                IResponse resp = _pokemonBuddyDistancesService.GetPokemonBuddyDistances(distanceInKm);
                 if (!resp.Success)
                     return BadRequest(resp);
                 return Ok(resp);

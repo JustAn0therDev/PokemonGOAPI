@@ -10,9 +10,7 @@ namespace PokemonGOAPI.Services
     public class ChargedPokemonMovesService : BaseService, IChargedPokemonMovesService
     {
         public override RestClient RestClient { 
-            get {
-                return new RestClient("https://pokemon-go1.p.rapidapi.com/charged_moves.json");
-            } 
+            get => new RestClient("https://pokemon-go1.p.rapidapi.com/charged_moves.json");
         }
 
         public ChargedPokemonMovesResponse GetChargedPokemonMoves(string searchBy, string value)
@@ -46,23 +44,17 @@ namespace PokemonGOAPI.Services
             => !string.IsNullOrWhiteSpace(searchBy) && !string.IsNullOrWhiteSpace(value);
 
         private ChargedPokemonMovesResponse ChargedPokemonMovesListWasFilteredSuccessfully(List<ChargedPokemonMove> chargedPokemonMoves)
-        {
-            return new ChargedPokemonMovesResponse
-            {
+            => new ChargedPokemonMovesResponse {
                 Success = true,
                 Message = "Charged Pokemon Moves list filtered successfully.",
                 ChargedPokemonMoves = chargedPokemonMoves
             };
-        }
 
         private ChargedPokemonMovesResponse ChargedPokemonMovesListWasRetrievedSuccessfully(List<ChargedPokemonMove> chargedPokemonMoves)
-        {
-            return new ChargedPokemonMovesResponse
-            {
+            => new ChargedPokemonMovesResponse {
                 Success = true,
-                Message = "Charged Pokemon Moves list retrieved successfully.",
+                Message = "Charged Pokemon Moves list retrived successfully.",
                 ChargedPokemonMoves = chargedPokemonMoves
             };
-        }
     }
 }

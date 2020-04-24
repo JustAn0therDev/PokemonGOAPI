@@ -2,7 +2,6 @@
 using PokemonGOAPI.Interfaces.Services;
 using PokemonGOAPI.Utils;
 using RestSharp;
-using System;
 using System.Collections.Generic;
 
 namespace PokemonGOAPI.Services
@@ -10,9 +9,7 @@ namespace PokemonGOAPI.Services
     public class NestingPokemonService : BaseService, INestingPokemonService
     {
         public override RestClient RestClient { 
-            get { 
-                return new RestClient("https://pokemon-go1.p.rapidapi.com/nesting_pokemon.json"); 
-            }
+            get => new RestClient("https://pokemon-go1.p.rapidapi.com/nesting_pokemon.json"); 
         }
 
         public NestingPokemonResponse GetNestingPokemon()

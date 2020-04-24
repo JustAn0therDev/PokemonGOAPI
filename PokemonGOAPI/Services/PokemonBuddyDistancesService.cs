@@ -1,48 +1,55 @@
 ﻿using PokemonGOAPI.Entities.Arguments.Responses;
 using PokemonGOAPI.Interfaces.Services;
+using PokemonGOAPI.Utils;
 using RestSharp;
 using System;
 using System.Collections.Generic;
 
 namespace PokemonGOAPI.Services
 {
-    public class PokemonBuddyDistancesService : IPokemonBuddyDistancesService
+    public class PokemonBuddyDistancesService : BaseService, IPokemonBuddyDistancesService
     {
+        public override RestClient RestClient {
+            get => new RestClient("https://pokemon-go1.p.rapidapi.com/pokemon_buddy_distances.json"); 
+        }
         public PokemonBuddyDistancesResponse GetPokemonBuddyDistances(string distanceInKm)
         {
-            var resp = new PokemonBuddyDistancesResponse();
-            var client = new RestClient("https://pokemon-go1.p.rapidapi.com/pokemon_buddy_distances.json");
+            Dictionary<string, List<PokemonBuddyDistance>> pokemonBuddyDistances = new Dictionary<string, List<PokemonBuddyDistance>>();
+            pokemonBuddyDistances = RestClient.Execute<Dictionary<string, List<PokemonBuddyDistance>>>(RestRequest)?.Data;
 
-            var request = new RestRequest(Method.GET);
-            request.BuildDefaultHeaders();
+            if (pokemonBuddyDistances == null || (pokemonBuddyDistances != null && pokemonBuddyDistances.Count == 0))
+                return ResponseFactory<PokemonBuddyDistancesResponse>.NothingReturnedFromTheRequestedList();
 
-            resp.PokemonBuddyDistances = client.Execute<Dictionary<string, List<PokemonBuddyDistance>>>(request).Data;
-
-            if (resp.PokemonBuddyDistances != null && resp.PokemonBuddyDistances.Count == 0)
+            if (DistanceInKmWasProvided(distanceInKm))
             {
-                resp.Message = "Nothing was retrieved from the pokemon buddy distance list.";
-                return resp;
+                Dictionary<string, List<PokemonBuddyDistance>> originalListForComparisonAfterFiltering = pokemonBuddyDistances;
+                pokemonBuddyDistances = pokemonBuddyDistances.FilterPokemonBuddyDistancesBySearchAndValue(distanceInKm);
+
+                if (pokemonBuddyDistances.Count == originalListForComparisonAfterFiltering.Count || pokemonBuddyDistances.Values.Count == 0)
+                    return ResponseFactory<PokemonBuddyDistancesResponse>.ListFilteringDidntWork();
+
+                return ListWasFilteredSuccessfully(pokemonBuddyDistances);
             }
 
-            if (!string.IsNullOrEmpty(distanceInKm))
-            {
-                Dictionary<string, List<PokemonBuddyDistance>> originalList = resp.PokemonBuddyDistances;
-                resp.PokemonBuddyDistances = resp.PokemonBuddyDistances.FilterPokemonBuddyDistancesBySearchAndValue(distanceInKm);
+            return ListWasRetrivedSuccessfully(pokemonBuddyDistances);
+        }
 
-                if (resp.PokemonBuddyDistances.Count == originalList.Count || resp.PokemonBuddyDistances.Values.Count == 0)
-                {
-                    resp.Message = $"No Pokemon that need {distanceInKm}KM in distance has been found. Did you mean to send something else?";
-                    resp.PokemonBuddyDistances = null;
-                    return resp;
-                }
-                resp.Success = true;
-                resp.Message = $"A list of pokemon that need matching {distanceInKm}KM in distance has been retrieved successfully.";
-                return resp;
-            }
+        private bool DistanceInKmWasProvided(string distanceInKm) => !string.IsNullOrEmpty(distanceInKm);
 
-            resp.Success = true;
-            resp.Message = "Pokemon buddy distance list retrieved succesfully.";
-            return resp;
+        private PokemonBuddyDistancesResponse ListWasFilteredSuccessfully(Dictionary<string, List<PokemonBuddyDistance>> pokemonBuddyDistances) {
+            return new PokemonBuddyDistancesResponse {
+                Success = true,
+                Message = $"List of buddy Pokemon filtered successfully.",
+                PokemonBuddyDistances = pokemonBuddyDistances
+            };
+        }
+
+        private PokemonBuddyDistancesResponse ListWasRetrivedSuccessfully(Dictionary<string, List<PokemonBuddyDistance>> pokemonBuddyDistances) {
+            return new PokemonBuddyDistancesResponse {
+                Success = true,
+                Message = "Pokemon buddy distance list retrieved succesfully.",
+                PokemonBuddyDistances = pokemonBuddyDistances
+            };
         }
     }
 }
