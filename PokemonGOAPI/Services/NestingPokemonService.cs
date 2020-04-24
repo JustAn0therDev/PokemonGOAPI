@@ -1,32 +1,36 @@
 ﻿using PokemonGOAPI.Entities.Arguments.Responses;
 using PokemonGOAPI.Interfaces.Services;
+using PokemonGOAPI.Utils;
 using RestSharp;
 using System;
 using System.Collections.Generic;
 
 namespace PokemonGOAPI.Services
 {
-    public class NestingPokemonService : INestingPokemonService
+    public class NestingPokemonService : BaseService, INestingPokemonService
     {
+        public override RestClient RestClient { 
+            get { 
+                return new RestClient("https://pokemon-go1.p.rapidapi.com/nesting_pokemon.json"); 
+            }
+        }
+
         public NestingPokemonResponse GetNestingPokemon()
         {
-            var resp = new NestingPokemonResponse();
-            var client = new RestClient("https://pokemon-go1.p.rapidapi.com/nesting_pokemon.json");
+            Dictionary<string, List<NestingPokemon>> nestingPokemon = RestClient.Execute<Dictionary<string, List<NestingPokemon>>>(RestRequest)?.Data;
 
-            var request = new RestRequest(Method.GET);
-            request.BuildDefaultHeaders();
+            if (nestingPokemon == null || (nestingPokemon != null && nestingPokemon.Values.Count == 0))
+                return ResponseFactory<NestingPokemonResponse>.NothingReturnedFromTheRequestedList();
 
-            resp.NestingPokemon = client.Execute<Dictionary<string, List<NestingPokemon>>>(request).Data;
+            return NestingPokemonListRetrievedSuccesfully(nestingPokemon);
+        }
 
-            if (resp.NestingPokemon != null && resp.NestingPokemon.Values.Count == 0)
-            {
-                resp.Message = "Nothing was found in the request nesting pokemon list.";
-                return resp;
-            }
-
-            resp.Success = true;
-            resp.Message = "Nesting pokemon list found succesfully.";
-            return resp;
+        private NestingPokemonResponse NestingPokemonListRetrievedSuccesfully(Dictionary<string, List<NestingPokemon>> nestingPokemon) {
+            return new NestingPokemonResponse {
+                Success = true,
+                Message = "Nesting pokemon list found successfully.",
+                NestingPokemon = nestingPokemon
+            };
         }
     }
 }

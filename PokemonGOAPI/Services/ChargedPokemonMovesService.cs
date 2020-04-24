@@ -7,16 +7,16 @@ using System.Collections.Generic;
 
 namespace PokemonGOAPI.Services
 {
-    public class ChargedPokemonMovesService : IChargedPokemonMovesService
+    public class ChargedPokemonMovesService : BaseService, IChargedPokemonMovesService
     {
-        public RestClient RestClient { get; set; } = new RestClient("https://pokemon-go1.p.rapidapi.com/charged_moves.json");
-        public RestRequest RestRequest { get; set; }
+        public override RestClient RestClient { 
+            get {
+                return new RestClient("https://pokemon-go1.p.rapidapi.com/charged_moves.json");
+            } 
+        }
 
         public ChargedPokemonMovesResponse GetChargedPokemonMoves(string searchBy, string value)
         {
-            RestRequest = new RestRequest();
-            RestRequest.BuildDefaultHeaders();
-
             bool argumentsAreNotValid = CheckIfReceivedArgumentsAreNotValid(searchBy, value);
             if (argumentsAreNotValid)
                 return ResponseFactory<ChargedPokemonMovesResponse>.BothRequiredValuesForFilteringWereNotProvided();

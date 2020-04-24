@@ -2,7 +2,7 @@
 
 namespace PokemonGOAPI.Interfaces.Services
 {
-    public interface IChargedPokemonMovesService : IService
+    public interface IChargedPokemonMovesService
     {
         ChargedPokemonMovesResponse GetChargedPokemonMoves(string searchBy, string value); 
     }
