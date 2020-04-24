@@ -14,7 +14,7 @@ namespace PokemonGOAPI.Services
         }
         public PokemonCandyResponse GetPokemonCandy(string numberOfCandies)
         {
-            Dictionary<string, List<PokemonCandy>> allPokemonCandy = new Dictionary<string, List<PokemonCandy>>();
+            Dictionary<string, List<PokemonCandy>> allPokemonCandy = null;
             allPokemonCandy = RestClient.Execute<Dictionary<string, List<PokemonCandy>>>(RestRequest)?.Data;
 
             if (allPokemonCandy == null || (allPokemonCandy != null && allPokemonCandy.Count == 0))

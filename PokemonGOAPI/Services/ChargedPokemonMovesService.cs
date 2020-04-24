@@ -15,11 +15,12 @@ namespace PokemonGOAPI.Services
 
         public ChargedPokemonMovesResponse GetChargedPokemonMoves(string searchBy, string value)
         {
-            bool argumentsAreNotValid = CheckIfReceivedArgumentsAreNotValid(searchBy, value);
-            if (argumentsAreNotValid)
+            List<ChargedPokemonMove> chargedPokemonMoves = null;
+
+            if (IfReceivedArgumentsAreNotValid(searchBy, value))
                 return ResponseFactory<ChargedPokemonMovesResponse>.BothRequiredValuesForFilteringWereNotProvided();
 
-            List<ChargedPokemonMove> chargedPokemonMoves = RestClient.Execute<List<ChargedPokemonMove>>(RestRequest)?.Data;
+            chargedPokemonMoves = RestClient.Execute<List<ChargedPokemonMove>>(RestRequest)?.Data;
 
             if (chargedPokemonMoves == null || chargedPokemonMoves.Count == 0)
                 return ResponseFactory<ChargedPokemonMovesResponse>.NothingReturnedFromTheRequestedList();
@@ -36,12 +37,6 @@ namespace PokemonGOAPI.Services
             }
             return ChargedPokemonMovesListWasRetrievedSuccessfully(chargedPokemonMoves);
         }
-
-        private bool CheckIfReceivedArgumentsAreNotValid(string searchBy, string value) 
-            => PokemonUtils.CheckSearchByAndValue(searchBy, value) != null ? true : false;
-
-        private bool ArgumentsAreValidAndNotEmpty(string searchBy, string value)
-            => !string.IsNullOrWhiteSpace(searchBy) && !string.IsNullOrWhiteSpace(value);
 
         private ChargedPokemonMovesResponse ChargedPokemonMovesListWasFilteredSuccessfully(List<ChargedPokemonMove> chargedPokemonMoves)
             => new ChargedPokemonMovesResponse {

@@ -19,5 +19,11 @@ namespace PokemonGOAPI.Services
                 throw new NotImplementedException("Client has not been implemented for the current subclass.");
             } 
         }
+
+        protected bool IfReceivedArgumentsAreNotValid(string searchBy, string value) 
+            => PokemonUtils.CheckSearchByAndValue(searchBy, value) != null ? true : false;
+        
+        protected bool ArgumentsAreValidAndNotEmpty(string searchBy, string value)
+            => !string.IsNullOrWhiteSpace(searchBy) && !string.IsNullOrWhiteSpace(value);
     }
 }

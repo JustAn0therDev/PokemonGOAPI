@@ -14,7 +14,7 @@ namespace PokemonGOAPI.Services
         }
         public PokemonBuddyDistancesResponse GetPokemonBuddyDistances(string distanceInKm)
         {
-            Dictionary<string, List<PokemonBuddyDistance>> pokemonBuddyDistances = new Dictionary<string, List<PokemonBuddyDistance>>();
+            Dictionary<string, List<PokemonBuddyDistance>> pokemonBuddyDistances = null;
             pokemonBuddyDistances = RestClient.Execute<Dictionary<string, List<PokemonBuddyDistance>>>(RestRequest)?.Data;
 
             if (pokemonBuddyDistances == null || (pokemonBuddyDistances != null && pokemonBuddyDistances.Count == 0))
@@ -36,20 +36,18 @@ namespace PokemonGOAPI.Services
 
         private bool DistanceInKmWasProvided(string distanceInKm) => !string.IsNullOrEmpty(distanceInKm);
 
-        private PokemonBuddyDistancesResponse ListWasFilteredSuccessfully(Dictionary<string, List<PokemonBuddyDistance>> pokemonBuddyDistances) {
-            return new PokemonBuddyDistancesResponse {
+        private PokemonBuddyDistancesResponse ListWasFilteredSuccessfully(Dictionary<string, List<PokemonBuddyDistance>> pokemonBuddyDistances) 
+            => new PokemonBuddyDistancesResponse {
                 Success = true,
-                Message = $"List of buddy Pokemon filtered successfully.",
+                Message = "Pokemon buddy distance list filtered successfully.",
                 PokemonBuddyDistances = pokemonBuddyDistances
             };
-        }
 
-        private PokemonBuddyDistancesResponse ListWasRetrivedSuccessfully(Dictionary<string, List<PokemonBuddyDistance>> pokemonBuddyDistances) {
-            return new PokemonBuddyDistancesResponse {
+        private PokemonBuddyDistancesResponse ListWasRetrivedSuccessfully(Dictionary<string, List<PokemonBuddyDistance>> pokemonBuddyDistances) 
+            => new PokemonBuddyDistancesResponse {
                 Success = true,
                 Message = "Pokemon buddy distance list retrieved successfully.",
                 PokemonBuddyDistances = pokemonBuddyDistances
             };
-        }
     }
 }
