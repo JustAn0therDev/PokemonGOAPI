@@ -23,9 +23,9 @@ namespace PokemonGOAPI.Services
             if (DistanceInKmWasProvided(distanceInKm))
             {
                 Dictionary<string, List<PokemonBuddyDistance>> originalListForComparisonAfterFiltering = pokemonBuddyDistances;
-                pokemonBuddyDistances = pokemonBuddyDistances.FilterPokemonBuddyDistancesBySearchAndValue(distanceInKm);
+                pokemonBuddyDistances = pokemonBuddyDistances.FilterPokemonBuddyDistancesByDistanceInKm(distanceInKm);
 
-                if (pokemonBuddyDistances.Count == originalListForComparisonAfterFiltering.Count || pokemonBuddyDistances.Values.Count == 0)
+                if (pokemonBuddyDistances.GetValueOrDefault(distanceInKm) == null || (pokemonBuddyDistances.Count == originalListForComparisonAfterFiltering.Count || pokemonBuddyDistances.Values.Count == 0))
                     return ResponseFactory<PokemonBuddyDistancesResponse>.ListFilteringDidntWork();
 
                 return ListWasFilteredSuccessfully(pokemonBuddyDistances);
