@@ -1,57 +1,56 @@
-﻿using PokemonGOAPI.Entities.Arguments.Responses;
-using PokemonGOAPI.Interfaces.Services;
-using RestSharp;
-using System;
+﻿using System;
 using System.Collections.Generic;
+using PokemonGOAPI.Entities.Arguments.Responses;
+using PokemonGOAPI.Interfaces.Services;
+using PokemonGOAPI.Utils;
+using RestSharp;
 
 namespace PokemonGOAPI.Services
 {
-    public class PokemonStatsService : IPokemonStatsService
+    public class PokemonStatsService : BaseService, IPokemonStatsService
     {
+        public override RestClient RestClient { 
+            get => new RestClient("https://pokemon-go1.p.rapidapi.com/pokemon_stats.json"); 
+        }
+
         public PokemonStatsResponse GetPokemonStats(string searchBy, string value)
         {
-            var parameterCheck = PokemonUtils.CheckSearchByAndValue(searchBy, value);
-            if (parameterCheck != null)
-                return null;
+            List<PokemonData> pokemonData = null;
 
-            var response = new PokemonStatsResponse();
+            if (ReceivedArgumentsAreNotValid(searchBy, value))
+                return ResponseFactory<PokemonStatsResponse>.BothRequiredValuesForFilteringWereNotProvided();
 
-            if ((string.IsNullOrEmpty(searchBy) && !string.IsNullOrEmpty(value)) || (!string.IsNullOrEmpty(searchBy) && string.IsNullOrEmpty(value)))
-            {
-                response.Message = "Cannot filter a pokemon stat without both required values.";
-                return response;
-            }
+            pokemonData = RestClient.Execute<List<PokemonData>>(RestRequest)?.Data;
 
-            var client = new RestClient("https://pokemon-go1.p.rapidapi.com/pokemon_stats.json");
-            var request = new RestRequest(Method.GET);
-            request.BuildDefaultHeaders();
-
-            response.PokemonData = client.Execute<List<PokemonData>>(request).Data;
-
-            if (response.PokemonData != null && response.PokemonData.Count == 0)
-            {
-                response.Message = "Nothing returned from the Pokemon Stats list.";
-                return response;
-            }
+            if (pokemonData == null || (pokemonData != null && pokemonData.Count == 0))
+                return ResponseFactory<PokemonStatsResponse>.NothingReturnedFromTheRequestedList();
 
             if (!string.IsNullOrEmpty(searchBy))
             {
-                List<PokemonData> originalList = response.PokemonData;
-                response.PokemonData = response.PokemonData.FilterPokemonList(searchBy, value);
-                if (response.PokemonData.Count == originalList.Count || response.PokemonData.Count == 0)
-                {
-                    response.Message = "No filter could be made by using the provided parameters. Did you mean to send something else?";
-                    response.PokemonData = null;
-                    return response;
-                }
-                response.Success = true;
-                response.Message = "Pokemon Stats list filtered successfully.";
-                return response;
+                List<PokemonData> originalListForComparisonAfterFiltering = pokemonData;
+                pokemonData = pokemonData.FilterPokemonList(searchBy, value);
+                
+                if (pokemonData.Count == originalListForComparisonAfterFiltering.Count || pokemonData.Count == 0)
+                    return ResponseFactory<PokemonStatsResponse>.ListFilteringDidntWork();
+
+                return ListWasFilteredSuccessfully(pokemonData);
             }
 
-            response.Success = true;
-            response.Message = "API request made and data returned successfully.";
-            return response;
+            return ListWasRetrievedSuccessfully(pokemonData);
         }
+
+        private PokemonStatsResponse ListWasFilteredSuccessfully(List<PokemonData> pokemonData)
+            => new PokemonStatsResponse {
+                Success = true,
+                Message = "Pokemon stats list filtered successfully.",
+                PokemonData = pokemonData
+            };
+
+        private PokemonStatsResponse ListWasRetrievedSuccessfully(List<PokemonData> pokemonData)
+            => new PokemonStatsResponse {
+                Success = true,
+                Message = "Pokemon stats list retrived successfully.",
+                PokemonData = pokemonData
+            };
     }
 }

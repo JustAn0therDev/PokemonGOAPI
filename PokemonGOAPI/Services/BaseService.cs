@@ -20,7 +20,7 @@ namespace PokemonGOAPI.Services
             } 
         }
 
-        protected bool IfReceivedArgumentsAreNotValid(string searchBy, string value) 
+        protected bool ReceivedArgumentsAreNotValid(string searchBy, string value) 
             => PokemonUtils.CheckSearchByAndValue(searchBy, value) != null ? true : false;
         
         protected bool ArgumentsAreValidAndNotEmpty(string searchBy, string value)

@@ -17,7 +17,7 @@ namespace PokemonGOAPI.Services
         {
             List<ChargedPokemonMove> chargedPokemonMoves = null;
 
-            if (IfReceivedArgumentsAreNotValid(searchBy, value))
+            if (ReceivedArgumentsAreNotValid(searchBy, value))
                 return ResponseFactory<ChargedPokemonMovesResponse>.BothRequiredValuesForFilteringWereNotProvided();
 
             chargedPokemonMoves = RestClient.Execute<List<ChargedPokemonMove>>(RestRequest)?.Data;
@@ -33,19 +33,19 @@ namespace PokemonGOAPI.Services
                 if (chargedPokemonMoves.Count == 0 || chargedPokemonMoves.Count == originalListFromRequestToCompareAfterFiltering.Count)
                     return ResponseFactory<ChargedPokemonMovesResponse>.ListFilteringDidntWork();
 
-                return ChargedPokemonMovesListWasFilteredSuccessfully(chargedPokemonMoves);
+                return ListWasFilteredSuccessfully(chargedPokemonMoves);
             }
-            return ChargedPokemonMovesListWasRetrievedSuccessfully(chargedPokemonMoves);
+            return ListWasRetrievedSuccessfully(chargedPokemonMoves);
         }
 
-        private ChargedPokemonMovesResponse ChargedPokemonMovesListWasFilteredSuccessfully(List<ChargedPokemonMove> chargedPokemonMoves)
+        private ChargedPokemonMovesResponse ListWasFilteredSuccessfully(List<ChargedPokemonMove> chargedPokemonMoves)
             => new ChargedPokemonMovesResponse {
                 Success = true,
                 Message = "Charged Pokemon Moves list filtered successfully.",
                 ChargedPokemonMoves = chargedPokemonMoves
             };
 
-        private ChargedPokemonMovesResponse ChargedPokemonMovesListWasRetrievedSuccessfully(List<ChargedPokemonMove> chargedPokemonMoves)
+        private ChargedPokemonMovesResponse ListWasRetrievedSuccessfully(List<ChargedPokemonMove> chargedPokemonMoves)
             => new ChargedPokemonMovesResponse {
                 Success = true,
                 Message = "Charged Pokemon Moves list retrived successfully.",
