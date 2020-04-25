@@ -12,6 +12,7 @@ namespace PokemonGOAPI.Services
         public override RestClient RestClient {
             get => new RestClient("https://pokemon-go1.p.rapidapi.com/pokemon_types.json");
         }
+
         public PokemonTypesResponse GetPokemonTypes(string pokemonName)
         {
             List<PokemonType> pokemonTypes = RestClient.Execute<List<PokemonType>>(RestRequest)?.Data;
@@ -19,7 +20,7 @@ namespace PokemonGOAPI.Services
             if (pokemonTypes == null || (pokemonTypes != null && pokemonTypes.Count == 0))
                 return ResponseFactory<PokemonTypesResponse>.NothingReturnedFromTheRequestedList();
 
-            if (!string.IsNullOrWhiteSpace(pokemonName))
+            if (ArgumentIsValidAndNotEmpty(pokemonName))
             {
                 List<PokemonType> originalListForComparisonAfterFiltering = pokemonTypes;
                 pokemonTypes = FilterPokemonTypes(pokemonTypes, pokemonName);
@@ -48,6 +49,5 @@ namespace PokemonGOAPI.Services
                 Message = "List of pokemon type retrieved successfully",
                 PokemonTypes = pokemonTypes
             };
-            
     }
 }

@@ -15,27 +15,25 @@ namespace PokemonGOAPI.Services
 
         public PokemonCandyResponse GetPokemonCandy(string numberOfCandies)
         {
-            Dictionary<string, List<PokemonCandy>> allPokemonCandy = RestClient.Execute<Dictionary<string, List<PokemonCandy>>>(RestRequest)?.Data;
+            Dictionary<string, List<PokemonCandy>> allPokemonCandyDictionary = RestClient.Execute<Dictionary<string, List<PokemonCandy>>>(RestRequest)?.Data;
 
-            if (allPokemonCandy == null || (allPokemonCandy != null && allPokemonCandy.Count == 0))
+            if (allPokemonCandyDictionary == null || (allPokemonCandyDictionary != null && allPokemonCandyDictionary.Count == 0))
                 return ResponseFactory<PokemonCandyResponse>.NothingReturnedFromTheRequestedList();
 
-            if (NumberOfCandiesWasProvided(numberOfCandies))
+            if (ArgumentIsValidAndNotEmpty(numberOfCandies))
             {
-                Dictionary<string, List<PokemonCandy>> originalListForComparisonAfterFiltering = allPokemonCandy;
-                allPokemonCandy = allPokemonCandy.FilterPokemonListByNumberOfCandiesAndGroupByPokemonId(numberOfCandies);
+                Dictionary<string, List<PokemonCandy>> originalListForComparisonAfterFiltering = allPokemonCandyDictionary;
+                allPokemonCandyDictionary = allPokemonCandyDictionary.FilterPokemonListByNumberOfCandiesAndGroupByPokemonId(numberOfCandies);
 
-                if (allPokemonCandy.GetValueOrDefault(numberOfCandies) == null
-                    || (allPokemonCandy.Count == originalListForComparisonAfterFiltering.Count || allPokemonCandy.Count == 0)
+                if (allPokemonCandyDictionary.GetValueOrDefault(numberOfCandies) == null
+                    || (allPokemonCandyDictionary.Count == originalListForComparisonAfterFiltering.Count || allPokemonCandyDictionary.Count == 0)
                     )
                     return ResponseFactory<PokemonCandyResponse>.ListFilteringDidntWork();
 
-                return ListWasFilteredSuccessfully(allPokemonCandy);
+                return ListWasFilteredSuccessfully(allPokemonCandyDictionary);
             }
-            return ListWasRetrivedSuccessfully(allPokemonCandy);
+            return ListWasRetrivedSuccessfully(allPokemonCandyDictionary);
         }
-
-        private bool NumberOfCandiesWasProvided(string numberOfCandies) => !string.IsNullOrEmpty(numberOfCandies);
 
         private PokemonCandyResponse ListWasFilteredSuccessfully(Dictionary<string, List<PokemonCandy>> allPokemonCandy) 
             => new PokemonCandyResponse {

@@ -12,6 +12,7 @@ namespace PokemonGOAPI.Services
         public override RestClient RestClient {
             get => new RestClient("https://pokemon-go1.p.rapidapi.com/pokemon_buddy_distances.json"); 
         }
+
         public PokemonBuddyDistancesResponse GetPokemonBuddyDistances(string distanceInKm)
         {
             Dictionary<string, List<PokemonBuddyDistance>> pokemonBuddyDistances = RestClient.Execute<Dictionary<string, List<PokemonBuddyDistance>>>(RestRequest)?.Data;
@@ -19,7 +20,7 @@ namespace PokemonGOAPI.Services
             if (pokemonBuddyDistances == null || (pokemonBuddyDistances != null && pokemonBuddyDistances.Count == 0))
                 return ResponseFactory<PokemonBuddyDistancesResponse>.NothingReturnedFromTheRequestedList();
 
-            if (DistanceInKmWasProvided(distanceInKm))
+            if (ArgumentIsValidAndNotEmpty(distanceInKm))
             {
                 Dictionary<string, List<PokemonBuddyDistance>> originalListForComparisonAfterFiltering = pokemonBuddyDistances;
                 pokemonBuddyDistances = pokemonBuddyDistances.FilterPokemonBuddyDistancesByDistanceInKm(distanceInKm);
@@ -32,8 +33,6 @@ namespace PokemonGOAPI.Services
 
             return ListWasRetrivedSuccessfully(pokemonBuddyDistances);
         }
-
-        private bool DistanceInKmWasProvided(string distanceInKm) => !string.IsNullOrEmpty(distanceInKm);
 
         private PokemonBuddyDistancesResponse ListWasFilteredSuccessfully(Dictionary<string, List<PokemonBuddyDistance>> pokemonBuddyDistances) 
             => new PokemonBuddyDistancesResponse {

@@ -25,5 +25,8 @@ namespace PokemonGOAPI.Services
         
         protected bool ArgumentsAreValidAndNotEmpty(string searchBy, string value)
             => !string.IsNullOrWhiteSpace(searchBy) && !string.IsNullOrWhiteSpace(value);
+
+        protected bool ArgumentIsValidAndNotEmpty(string argument) 
+            => !string.IsNullOrWhiteSpace(argument);
     }
 }
