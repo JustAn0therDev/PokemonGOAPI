@@ -1,32 +1,34 @@
 ﻿using PokemonGOAPI.Entities.Arguments.Responses;
 using PokemonGOAPI.Interfaces.Services;
+using PokemonGOAPI.Utils;
 using RestSharp;
-using System;
 using System.Collections.Generic;
 
 namespace PokemonGOAPI.Services
 {
-    public class PokemonNameService : IPokemonNameService
+    public class PokemonNameService : BaseService, IPokemonNameService
     {
+        public override RestClient RestClient { 
+            get => new RestClient("https://pokemon-go1.p.rapidapi.com/pokemon_names.json"); 
+        }
+
         public PokemonNameResponse GetPokemonName()
         {
-            var resp = new PokemonNameResponse();
-            var client = new RestClient("https://pokemon-go1.p.rapidapi.com/pokemon_names.json");
+            Dictionary<string, List<PokemonNameObject>> pokemonNameDictionary = null;
 
-            var request = new RestRequest(Method.GET);
-            request.BuildDefaultHeaders();
+            pokemonNameDictionary = RestClient.Execute<Dictionary<string, List<PokemonNameObject>>>(RestRequest)?.Data;
 
-            resp.PokemonNames = client.Execute<Dictionary<string, List<PokemonNameObject>>>(request).Data;
+            if (pokemonNameDictionary != null && pokemonNameDictionary.Count == 0)
+                return ResponseFactory<PokemonNameResponse>.NothingReturnedFromTheRequestedList();
 
-            if (resp.PokemonNames != null && resp.PokemonNames.Count == 0)
-            {
-                resp.Message = "Nothing returned from the Pokemon Name list.";
-                return resp;
-            }
-
-            resp.Success = true;
-            resp.Message = "Pokemon names list retrieved successfully.";
-            return resp;
+            return ListWasRetrievedSuccessfully(pokemonNameDictionary);
         }
+
+        private PokemonNameResponse ListWasRetrievedSuccessfully(Dictionary<string, List<PokemonNameObject>> pokemonNameDictionary) 
+            => new PokemonNameResponse {
+            Success = true,
+            Message = "Pokemon names list retrieved successfully.",
+            PokemonNames = pokemonNameDictionary
+            };
     }
 }
