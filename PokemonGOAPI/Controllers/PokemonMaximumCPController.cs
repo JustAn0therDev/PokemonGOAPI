@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using PokemonGOAPI.Entities;
+using PokemonGOAPI.Interfaces;
 using PokemonGOAPI.Interfaces.Services;
 using System;
 
@@ -31,11 +32,10 @@ namespace PokemonGOAPI.Controllers
         {
             try
             {
-                var resp = _pokemonMaximumCPService.GetPokemonMaximumCP();
+                IResponse resp = _pokemonMaximumCPService.GetPokemonMaximumCP();
                 if (!resp.Success)
                     return BadRequest(resp);
-                else
-                    return Ok(resp);
+                return Ok(resp);
             }
             catch (Exception ex)
             {

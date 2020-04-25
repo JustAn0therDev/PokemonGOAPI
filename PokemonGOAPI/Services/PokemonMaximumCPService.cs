@@ -1,32 +1,34 @@
 ﻿using PokemonGOAPI.Entities.Arguments.Responses;
 using PokemonGOAPI.Interfaces.Services;
+using PokemonGOAPI.Utils;
 using RestSharp;
-using System;
 using System.Collections.Generic;
 
 namespace PokemonGOAPI.Services
 {
-    public class PokemonMaximumCPService : IPokemonMaximumCPService
+    public class PokemonMaximumCPService : BaseService, IPokemonMaximumCPService
     {
+        public override RestClient RestClient {
+            get => new RestClient("https://pokemon-go1.p.rapidapi.com/pokemon_max_cp.json");
+        }
+
         public PokemonMaximumCPResponse GetPokemonMaximumCP()
         {
-            var resp = new PokemonMaximumCPResponse();
-            var client = new RestClient("https://pokemon-go1.p.rapidapi.com/pokemon_max_cp.json");
+            List<PokemonMaximumCP> pokemonMaximumCPs = null;
 
-            var request = new RestRequest(Method.GET);
-            request.BuildDefaultHeaders();
+            pokemonMaximumCPs = RestClient.Execute<List<PokemonMaximumCP>>(RestRequest)?.Data;
 
-            resp.PokemonMaximumCPList = client.Execute<List<PokemonMaximumCP>>(request).Data;
+            if (pokemonMaximumCPs == null || (pokemonMaximumCPs != null && pokemonMaximumCPs.Count == 0))
+                return ResponseFactory<PokemonMaximumCPResponse>.NothingReturnedFromTheRequestedList();
 
-            if (resp.PokemonMaximumCPList != null && resp.PokemonMaximumCPList.Count == 0)
-            {
-                resp.Message = "Nothing returned from the Pokemon Maximum CP list.";
-                return resp;
-            }
-
-            resp.Success = true;
-            resp.Message = "Pokemon Maximum CP list retrieved succesfully!";
-            return resp;
+            return ListWasRetrievedSuccessfully(pokemonMaximumCPs);
         }
+
+        private PokemonMaximumCPResponse ListWasRetrievedSuccessfully(List<PokemonMaximumCP> pokemonMaximumCPs) 
+            => new PokemonMaximumCPResponse {
+                Success = true,
+                Message = "List of Pokemon Max CPs retrieved successfully",
+                PokemonMaximumCPList = pokemonMaximumCPs
+            };
     }
 }
