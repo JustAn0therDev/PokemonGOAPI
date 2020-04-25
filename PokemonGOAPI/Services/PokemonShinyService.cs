@@ -1,32 +1,33 @@
 ﻿using PokemonGOAPI.Entities.Arguments.Responses;
 using PokemonGOAPI.Interfaces.Services;
+using PokemonGOAPI.Utils;
 using RestSharp;
-using System;
 using System.Collections.Generic;
 
 namespace PokemonGOAPI.Services
 {
-    public class PokemonShinyService : IPokemonShinyService
+    public class PokemonShinyService : BaseService, IPokemonShinyService
     {
+        public override RestClient RestClient {
+            get => new RestClient("https://pokemon-go1.p.rapidapi.com/shiny_pokemon.json");
+        }
+
         public PokemonShinyResponse GetPokemonShiny()
         {
-            var resp = new PokemonShinyResponse();
-            var client = new RestClient("https://pokemon-go1.p.rapidapi.com/shiny_pokemon.json");
+            Dictionary<string, List<PokemonShiny>> shinyPokemonDictionary = null;
+            shinyPokemonDictionary = RestClient.Execute<Dictionary<string, List<PokemonShiny>>>(RestRequest)?.Data;
 
-            var request = new RestRequest(Method.GET);
-            request.BuildDefaultHeaders();
+            if (shinyPokemonDictionary != null && shinyPokemonDictionary.Count == 0)
+                return ResponseFactory<PokemonShinyResponse>.NothingReturnedFromTheRequestedList();
 
-            resp.PokemonShinyList = client.Execute<Dictionary<string, List<PokemonShiny>>>(request).Data;
-
-            if (resp.PokemonShinyList != null && resp.PokemonShinyList.Count == 0)
-            {
-                resp.Message = "Nothing returned from the Pokemon Shiny list.";
-                return resp;
-            }
-
-            resp.Success = true;
-            resp.Message = "Pokemon Shiny list returned successfully.";
-            return resp;
+            return ListWasRetrievedSuccessfully(shinyPokemonDictionary);
         }
+
+        private PokemonShinyResponse ListWasRetrievedSuccessfully(Dictionary<string, List<PokemonShiny>> shinyPokemonDictionary)
+            => new PokemonShinyResponse {
+                Success = true,
+                Message = "Pokemon Shiny list returned successfully.",
+                PokemonShinyList = shinyPokemonDictionary
+            };
     }
 }

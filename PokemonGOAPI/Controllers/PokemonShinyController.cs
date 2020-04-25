@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using PokemonGOAPI.Entities;
+using PokemonGOAPI.Interfaces;
 using PokemonGOAPI.Interfaces.Services;
 using System;
 
@@ -31,11 +32,9 @@ namespace PokemonGOAPI.Controllers
         {
             try
             {
-                var resp = _pokemonShinyService.GetPokemonShiny();
-
+                IResponse resp = _pokemonShinyService.GetPokemonShiny();
                 if (!resp.Success)
                     return BadRequest(resp);
-
                 return Ok(resp);
             }
             catch (Exception ex)
