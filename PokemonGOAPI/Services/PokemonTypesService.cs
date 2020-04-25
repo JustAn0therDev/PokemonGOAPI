@@ -1,47 +1,55 @@
 ﻿using PokemonGOAPI.Entities.Arguments.Responses;
 using PokemonGOAPI.Interfaces.Services;
+using PokemonGOAPI.Utils;
 using RestSharp;
-using System;
 using System.Collections.Generic;
 using System.Linq;
 
 namespace PokemonGOAPI.Services
 {
-    public class PokemonTypesService : IPokemonTypesService
+    public class PokemonTypesService : BaseService, IPokemonTypesService
     {
+        public override RestClient RestClient {
+            get => new RestClient("https://pokemon-go1.p.rapidapi.com/pokemon_types.json");
+        }
         public PokemonTypesResponse GetPokemonTypes(string pokemonName)
         {
-            var resp = new PokemonTypesResponse();
-            var client = new RestClient("https://pokemon-go1.p.rapidapi.com/pokemon_types.json");
+            List<PokemonType> pokemonTypes = null;
 
-            var request = new RestRequest(Method.GET);
-            request.BuildDefaultHeaders();
-            resp.PokemonTypes = client.Execute<List<PokemonType>>(request).Data;
+            pokemonTypes = RestClient.Execute<List<PokemonType>>(RestRequest)?.Data;
 
-            if (resp.PokemonTypes != null && resp.PokemonTypes.Count == 0)
+            if (pokemonTypes == null || (pokemonTypes != null && pokemonTypes.Count == 0))
+                return ResponseFactory<PokemonTypesResponse>.NothingReturnedFromTheRequestedList();
+
+            if (!string.IsNullOrWhiteSpace(pokemonName))
             {
-                resp.Message = "Nothing was retrieved from the Pokemon types list.";
-                return resp;
-            }
+                List<PokemonType> originalListForComparisonAfterFiltering = pokemonTypes;
+                pokemonTypes = FilterPokemonTypes(pokemonTypes, pokemonName);
 
-            if (!string.IsNullOrEmpty(pokemonName))
-            {
-                List<PokemonType> originalList = resp.PokemonTypes;
-                resp.PokemonTypes = resp.PokemonTypes.Where(w => w.PokemonName.ToLower() == pokemonName.ToLower()).ToList();
-                if (resp.PokemonTypes.Count == originalList.Count || resp.PokemonTypes.Count == 0)
-                {
-                    resp.Message = "A filter on the pokemon types list could not be made. Did you mean to send something else?";
-                    resp.PokemonTypes = null;
-                    return resp;
-                }
-                resp.Success = true;
-                resp.Message = "Pokemon types list filtered successfully.";
-                return resp;
-            }
+                if (pokemonTypes.Count == originalListForComparisonAfterFiltering.Count || pokemonTypes.Count == 0)
+                    return ResponseFactory<PokemonTypesResponse>.ListFilteringDidntWork();
 
-            resp.Success = true;
-            resp.Message = "Pokemon Types list retrieved successfully.";
-            return resp;
+                return ListWasFilteredSuccessfully(pokemonTypes);
+            }
+            return ListWasRetrievedSuccessfully(pokemonTypes);
         }
+
+        private List<PokemonType> FilterPokemonTypes(List<PokemonType> pokemonTypes, string pokemonName) 
+            => pokemonTypes.Where(w => w.PokemonName.ToLower() == pokemonName.ToLower()).ToList();
+
+        private PokemonTypesResponse ListWasFilteredSuccessfully(List<PokemonType> pokemonTypes) 
+            => new PokemonTypesResponse {
+                Success = true,
+                Message = "List of pokemon type filtered successfully",
+                PokemonTypes = pokemonTypes
+            };
+
+        private PokemonTypesResponse ListWasRetrievedSuccessfully(List<PokemonType> pokemonTypes) 
+            => new PokemonTypesResponse {
+                Success = true,
+                Message = "List of pokemon type retrieved successfully",
+                PokemonTypes = pokemonTypes
+            };
+            
     }
 }
