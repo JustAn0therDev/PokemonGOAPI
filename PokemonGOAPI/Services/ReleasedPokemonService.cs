@@ -1,32 +1,34 @@
 ﻿using PokemonGOAPI.Entities.Arguments.Responses;
 using PokemonGOAPI.Interfaces.Services;
+using PokemonGOAPI.Utils;
 using RestSharp;
 using System;
 using System.Collections.Generic;
 
 namespace PokemonGOAPI.Services
 {
-    public class ReleasedPokemonService : IReleasedPokemonService
+    public class ReleasedPokemonService : BaseService, IReleasedPokemonService
     {
+        public override RestClient RestClient {
+            get => new RestClient("https://pokemon-go1.p.rapidapi.com/released_pokemon.json");
+        }
+
         public ReleasedPokemonResponse GetReleasedPokemonResponse()
         {
-            var resp = new ReleasedPokemonResponse();
+            Dictionary<string, List<PokemonNameObject>> releasedPokemonDictionary = null;
+            releasedPokemonDictionary = RestClient.Execute<Dictionary<string, List<PokemonNameObject>>>(RestRequest).Data;
 
-            var client = new RestClient("https://pokemon-go1.p.rapidapi.com/released_pokemon.json");
-            var request = new RestRequest(Method.GET);
-            request.BuildDefaultHeaders();
+            if (releasedPokemonDictionary != null && releasedPokemonDictionary.Count == 0)
+                return ResponseFactory<ReleasedPokemonResponse>.NothingReturnedFromTheRequestedList();
 
-            resp.ReleasedPokemon = client.Execute<Dictionary<string, List<PokemonNameObject>>>(request).Data;
-
-            if (resp.ReleasedPokemon != null && resp.ReleasedPokemon.Count == 0)
-            {
-                resp.Message = "Nothing returned from the released pokemon list.";
-                return resp;
-            }
-
-            resp.Success = true;
-            resp.Message = "Released pokemon list returned successfully.";
-            return resp;
+            return ListWasRetrievedSuccessfully(releasedPokemonDictionary);
         }
+
+        private ReleasedPokemonResponse ListWasRetrievedSuccessfully(Dictionary<string, List<PokemonNameObject>> releasedPokemonDictionary) 
+            => new ReleasedPokemonResponse {
+                Success = true,
+                Message = "Released Pokemon list retrieved successfully.",
+                ReleasedPokemon = releasedPokemonDictionary
+            };
     }
 }
