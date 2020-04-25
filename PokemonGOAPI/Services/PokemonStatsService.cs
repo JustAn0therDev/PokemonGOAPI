@@ -25,11 +25,11 @@ namespace PokemonGOAPI.Services
             if (pokemonData == null || (pokemonData != null && pokemonData.Count == 0))
                 return ResponseFactory<PokemonStatsResponse>.NothingReturnedFromTheRequestedList();
 
-            if (!string.IsNullOrEmpty(searchBy))
+            if (ArgumentsAreValidAndNotEmpty(searchBy, value))
             {
                 List<PokemonData> originalListForComparisonAfterFiltering = pokemonData;
                 pokemonData = pokemonData.FilterPokemonList(searchBy, value);
-                
+
                 if (pokemonData.Count == originalListForComparisonAfterFiltering.Count || pokemonData.Count == 0)
                     return ResponseFactory<PokemonStatsResponse>.ListFilteringDidntWork();
 
