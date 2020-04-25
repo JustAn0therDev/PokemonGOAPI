@@ -14,8 +14,7 @@ namespace PokemonGOAPI.Services
 
         public PossibleDittoPokemonResponse GetPossibleDittoPokemon()
         {
-            Dictionary<string, List<PokemonNameObject>> possibleDittoPokemonDictionary = null;
-            possibleDittoPokemonDictionary = RestClient.Execute<Dictionary<string, List<PokemonNameObject>>>(RestRequest)?.Data;
+            Dictionary<string, List<PokemonNameObject>> possibleDittoPokemonDictionary = RestClient.Execute<Dictionary<string, List<PokemonNameObject>>>(RestRequest)?.Data;
 
             if (possibleDittoPokemonDictionary == null || (possibleDittoPokemonDictionary != null && possibleDittoPokemonDictionary.Count == 0))
                 return ResponseFactory<PossibleDittoPokemonResponse>.NothingReturnedFromTheRequestedList();

@@ -14,9 +14,7 @@ namespace PokemonGOAPI.Services
 
         public PokemonNameResponse GetPokemonName()
         {
-            Dictionary<string, List<PokemonNameObject>> pokemonNameDictionary = null;
-
-            pokemonNameDictionary = RestClient.Execute<Dictionary<string, List<PokemonNameObject>>>(RestRequest)?.Data;
+            Dictionary<string, List<PokemonNameObject>> pokemonNameDictionary = RestClient.Execute<Dictionary<string, List<PokemonNameObject>>>(RestRequest)?.Data;
 
             if (pokemonNameDictionary != null && pokemonNameDictionary.Count == 0)
                 return ResponseFactory<PokemonNameResponse>.NothingReturnedFromTheRequestedList();

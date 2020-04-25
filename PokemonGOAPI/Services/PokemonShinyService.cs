@@ -14,8 +14,7 @@ namespace PokemonGOAPI.Services
 
         public PokemonShinyResponse GetPokemonShiny()
         {
-            Dictionary<string, List<PokemonShiny>> shinyPokemonDictionary = null;
-            shinyPokemonDictionary = RestClient.Execute<Dictionary<string, List<PokemonShiny>>>(RestRequest)?.Data;
+            Dictionary<string, List<PokemonShiny>> shinyPokemonDictionary = RestClient.Execute<Dictionary<string, List<PokemonShiny>>>(RestRequest)?.Data;
 
             if (shinyPokemonDictionary != null && shinyPokemonDictionary.Count == 0)
                 return ResponseFactory<PokemonShinyResponse>.NothingReturnedFromTheRequestedList();

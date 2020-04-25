@@ -15,12 +15,10 @@ namespace PokemonGOAPI.Services
 
         public ChargedPokemonMovesResponse GetChargedPokemonMoves(string searchBy, string value)
         {
-            List<ChargedPokemonMove> chargedPokemonMoves = null;
-
             if (ReceivedArgumentsAreNotValid(searchBy, value))
                 return ResponseFactory<ChargedPokemonMovesResponse>.BothRequiredValuesForFilteringWereNotProvided();
 
-            chargedPokemonMoves = RestClient.Execute<List<ChargedPokemonMove>>(RestRequest)?.Data;
+            List<ChargedPokemonMove> chargedPokemonMoves = RestClient.Execute<List<ChargedPokemonMove>>(RestRequest)?.Data;
 
             if (chargedPokemonMoves == null || chargedPokemonMoves.Count == 0)
                 return ResponseFactory<ChargedPokemonMovesResponse>.NothingReturnedFromTheRequestedList();
@@ -30,7 +28,7 @@ namespace PokemonGOAPI.Services
                 List<ChargedPokemonMove> originalListFromRequestToCompareAfterFiltering = chargedPokemonMoves;
                 chargedPokemonMoves = chargedPokemonMoves.FilterChargedPokemonMovesList(searchBy, value);
 
-                if (chargedPokemonMoves.Count == 0 || chargedPokemonMoves.Count == originalListFromRequestToCompareAfterFiltering.Count)
+                if (chargedPokemonMoves == null || (chargedPokemonMoves.Count == 0 || chargedPokemonMoves.Count == originalListFromRequestToCompareAfterFiltering.Count))
                     return ResponseFactory<ChargedPokemonMovesResponse>.ListFilteringDidntWork();
 
                 return ListWasFilteredSuccessfully(chargedPokemonMoves);

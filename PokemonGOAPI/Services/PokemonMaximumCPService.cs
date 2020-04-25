@@ -14,10 +14,7 @@ namespace PokemonGOAPI.Services
 
         public PokemonMaximumCPResponse GetPokemonMaximumCP()
         {
-            List<PokemonMaximumCP> pokemonMaximumCPs = null;
-
-            pokemonMaximumCPs = RestClient.Execute<List<PokemonMaximumCP>>(RestRequest)?.Data;
-
+            List<PokemonMaximumCP> pokemonMaximumCPs = RestClient.Execute<List<PokemonMaximumCP>>(RestRequest)?.Data;
             if (pokemonMaximumCPs == null || (pokemonMaximumCPs != null && pokemonMaximumCPs.Count == 0))
                 return ResponseFactory<PokemonMaximumCPResponse>.NothingReturnedFromTheRequestedList();
 

@@ -15,12 +15,10 @@ namespace PokemonGOAPI.Services
 
         public PokemonEncounterResponse GetPokemonEncounter(string searchBy, string value)
         {
-            List<PokemonEncounter> pokemonEncounters = null;
-
             if (ReceivedArgumentsAreNotValid(searchBy, value))
                 return ResponseFactory<PokemonEncounterResponse>.BothRequiredValuesForFilteringWereNotProvided();
 
-            pokemonEncounters = RestClient.Execute<List<PokemonEncounter>>(RestRequest)?.Data;
+            List<PokemonEncounter> pokemonEncounters = RestClient.Execute<List<PokemonEncounter>>(RestRequest)?.Data;
 
             if (pokemonEncounters == null || (pokemonEncounters != null && pokemonEncounters.Count == 0))
                 return ResponseFactory<PokemonEncounterResponse>.NothingReturnedFromTheRequestedList();

@@ -14,8 +14,7 @@ namespace PokemonGOAPI.Services
         }
         public PokemonBuddyDistancesResponse GetPokemonBuddyDistances(string distanceInKm)
         {
-            Dictionary<string, List<PokemonBuddyDistance>> pokemonBuddyDistances = null;
-            pokemonBuddyDistances = RestClient.Execute<Dictionary<string, List<PokemonBuddyDistance>>>(RestRequest)?.Data;
+            Dictionary<string, List<PokemonBuddyDistance>> pokemonBuddyDistances = RestClient.Execute<Dictionary<string, List<PokemonBuddyDistance>>>(RestRequest)?.Data;
 
             if (pokemonBuddyDistances == null || (pokemonBuddyDistances != null && pokemonBuddyDistances.Count == 0))
                 return ResponseFactory<PokemonBuddyDistancesResponse>.NothingReturnedFromTheRequestedList();

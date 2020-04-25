@@ -12,10 +12,10 @@ namespace PokemonGOAPI.Services
         public override RestClient RestClient {
             get => new RestClient("https://pokemon-go1.p.rapidapi.com/pokemon_candy_to_evolve.json");
         }
+
         public PokemonCandyResponse GetPokemonCandy(string numberOfCandies)
         {
-            Dictionary<string, List<PokemonCandy>> allPokemonCandy = null;
-            allPokemonCandy = RestClient.Execute<Dictionary<string, List<PokemonCandy>>>(RestRequest)?.Data;
+            Dictionary<string, List<PokemonCandy>> allPokemonCandy = RestClient.Execute<Dictionary<string, List<PokemonCandy>>>(RestRequest)?.Data;
 
             if (allPokemonCandy == null || (allPokemonCandy != null && allPokemonCandy.Count == 0))
                 return ResponseFactory<PokemonCandyResponse>.NothingReturnedFromTheRequestedList();
@@ -25,7 +25,9 @@ namespace PokemonGOAPI.Services
                 Dictionary<string, List<PokemonCandy>> originalListForComparisonAfterFiltering = allPokemonCandy;
                 allPokemonCandy = allPokemonCandy.FilterPokemonListByNumberOfCandiesAndGroupByPokemonId(numberOfCandies);
 
-                if (allPokemonCandy.Count == originalListForComparisonAfterFiltering.Count || allPokemonCandy.Count == 0)
+                if (allPokemonCandy.GetValueOrDefault(numberOfCandies) == null
+                    || (allPokemonCandy.Count == originalListForComparisonAfterFiltering.Count || allPokemonCandy.Count == 0)
+                    )
                     return ResponseFactory<PokemonCandyResponse>.ListFilteringDidntWork();
 
                 return ListWasFilteredSuccessfully(allPokemonCandy);

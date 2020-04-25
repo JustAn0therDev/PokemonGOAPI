@@ -8,7 +8,7 @@ namespace PokemonGOAPI.Entities.Arguments.Responses
     {
         public bool Success { get; set; }
         public string Message { get; set; }
-        public Dictionary<string, List<PokemonCandy>> AllPokemonCandy { get; set; } = new Dictionary<string, List<PokemonCandy>>();
+        public Dictionary<string, List<PokemonCandy>> AllPokemonCandy { get; set; } = null;
     }
 
     public class PokemonCandy

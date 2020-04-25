@@ -11,34 +11,27 @@ namespace System
          string searchBy,
          string value)
         {
-            switch (searchBy.ToLower())
+            return (searchBy.ToLower()) switch
             {
-                case "pokemonname":
-                    return pokemonList.Where(w => w.PokemonName == value).ToList();
-                case "pokemonid":
-                    return pokemonList.Where(w => w.PokemonId == Convert.ToInt32(value)).ToList();
-                case "form":
-                    return pokemonList.Where(w => w.Form == value).ToList();
-                case "baseattack":
-                    return pokemonList.Where(w => w.BaseAttack == Convert.ToInt32(value)).ToList();
-                case "basedefense":
-                    return pokemonList.Where(w => w.BaseDefense == Convert.ToInt32(value)).ToList();
-                case "basestamina":
-                    return pokemonList.Where(w => w.BaseStamina == Convert.ToInt32(value)).ToList();
-                default:
-                    return pokemonList;
-            }
+                "pokemonname" => pokemonList.Where(w => w.PokemonName == value).ToList(),
+                "pokemonid" => pokemonList.Where(w => w.PokemonId == Convert.ToInt32(value)).ToList(),
+                "form" => pokemonList.Where(w => w.Form == value).ToList(),
+                "baseattack" => pokemonList.Where(w => w.BaseAttack == Convert.ToInt32(value)).ToList(),
+                "basedefense" => pokemonList.Where(w => w.BaseDefense == Convert.ToInt32(value)).ToList(),
+                "basestamina" => pokemonList.Where(w => w.BaseStamina == Convert.ToInt32(value)).ToList(),
+                _ => pokemonList,
+            };
         }
 
         public static Dictionary<string, List<PokemonCandy>> FilterPokemonListByNumberOfCandiesAndGroupByPokemonId(
-            this Dictionary<string, List<PokemonCandy>> pokemonCandyDictionary, 
+            this Dictionary<string, List<PokemonCandy>> pokemonCandyDictionary,
             string numberOfCandies
             )
         {
-            List<PokemonCandy> filteredPokemonCandyList;
-            pokemonCandyDictionary.TryGetValue(numberOfCandies, out filteredPokemonCandyList);
+            pokemonCandyDictionary.TryGetValue(numberOfCandies, out List<PokemonCandy> filteredPokemonCandyList);
 
-            filteredPokemonCandyList = filteredPokemonCandyList.GroupBy(gb => gb.PokemonId).Select(s => s.FirstOrDefault()).ToList();
+            if (filteredPokemonCandyList != null)
+                filteredPokemonCandyList = filteredPokemonCandyList.GroupBy(gb => gb.PokemonId).Select(s => s.FirstOrDefault()).ToList();
 
             pokemonCandyDictionary = new Dictionary<string, List<PokemonCandy>>()
                     {
@@ -67,50 +60,34 @@ namespace System
             string searchBy,
             string value)
         {
-            switch (searchBy.ToLower())
+            return (searchBy.ToLower()) switch
             {
-                case "name":
-                    return pokemonFastMovesList.Where(w => w.Name == value).ToList();
-                case "power":
-                    return pokemonFastMovesList.Where(w => w.Power == Convert.ToInt32(value)).ToList();
-                case "type":
-                    return pokemonFastMovesList.Where(w => w.Type == value).ToList();
-                case "stamina_loss_scaler":
-                    return pokemonFastMovesList.Where(w => w.StaminaLossScaler == value).ToList();
-                case "duration":
-                    return pokemonFastMovesList.Where(w => w.Duration == Convert.ToInt32(value)).ToList();
-                case "energy_delta":
-                    return pokemonFastMovesList.Where(w => w.EnergyDelta == Convert.ToInt32(value)).ToList();
-                default:
-                    return pokemonFastMovesList;
-            }
+                "name" => pokemonFastMovesList.Where(w => w.Name == value).ToList(),
+                "power" => pokemonFastMovesList.Where(w => w.Power == Convert.ToInt32(value)).ToList(),
+                "type" => pokemonFastMovesList.Where(w => w.Type == value).ToList(),
+                "stamina_loss_scaler" => pokemonFastMovesList.Where(w => w.StaminaLossScaler == value).ToList(),
+                "duration" => pokemonFastMovesList.Where(w => w.Duration == Convert.ToInt32(value)).ToList(),
+                "energy_delta" => pokemonFastMovesList.Where(w => w.EnergyDelta == Convert.ToInt32(value)).ToList(),
+                _ => pokemonFastMovesList,
+            };
         }
         public static List<ChargedPokemonMove> FilterChargedPokemonMovesList(
             this List<ChargedPokemonMove> chargedPokemonMovesList,
              string searchBy,
              string value)
         {
-            switch (searchBy.ToLower())
+            return (searchBy.ToLower()) switch
             {
-                case "criticalchance":
-                    return chargedPokemonMovesList.Where(w => w.CriticalChance == value).ToList();
-                case "duration":
-                    return chargedPokemonMovesList.Where(w => w.Duration == Convert.ToInt32(value)).ToList();
-                case "form":
-                    return chargedPokemonMovesList.Where(w => w.EnergyDelta == Convert.ToInt32(value)).ToList();
-                case "move_id":
-                    return chargedPokemonMovesList.Where(w => w.MoveId == Convert.ToInt32(value)).ToList();
-                case "name":
-                    return chargedPokemonMovesList.Where(w => w.Name == value).ToList();
-                case "power":
-                    return chargedPokemonMovesList.Where(w => w.Power == Convert.ToInt32(value)).ToList();
-                case "stamina_loss_scaler":
-                    return chargedPokemonMovesList.Where(w => w.StaminaLossScaler == value).ToList();
-                case "type":
-                    return chargedPokemonMovesList.Where(w => w.Type == value).ToList();
-                default:
-                    return chargedPokemonMovesList;
-            }
+                "criticalchance" => chargedPokemonMovesList.Where(w => w.CriticalChance == value).ToList(),
+                "duration" => chargedPokemonMovesList.Where(w => w.Duration == Convert.ToInt32(value)).ToList(),
+                "form" => chargedPokemonMovesList.Where(w => w.EnergyDelta == Convert.ToInt32(value)).ToList(),
+                "move_id" => chargedPokemonMovesList.Where(w => w.MoveId == Convert.ToInt32(value)).ToList(),
+                "name" => chargedPokemonMovesList.Where(w => w.Name == value).ToList(),
+                "power" => chargedPokemonMovesList.Where(w => w.Power == Convert.ToInt32(value)).ToList(),
+                "stamina_loss_scaler" => chargedPokemonMovesList.Where(w => w.StaminaLossScaler == value).ToList(),
+                "type" => chargedPokemonMovesList.Where(w => w.Type == value).ToList(),
+                _ => chargedPokemonMovesList,
+            };
         }
 
         public static List<PokemonEncounter> FilterPokemonEncountersList(
@@ -118,29 +95,19 @@ namespace System
             string searchBy,
             string value)
         {
-            switch (searchBy.ToLower())
+            return (searchBy.ToLower()) switch
             {
-                case "attackprobability":
-                    return pokemonEncountersList.Where(w => w.AttackProbability == value).ToList();
-                case "base_capture_rate":
-                    return pokemonEncountersList.Where(w => w.BaseCaptureRate == value).ToList();
-                case "base_flee_rate":
-                    return pokemonEncountersList.Where(w => w.BaseFleeRate == value).ToList();
-                case "dodge_probability":
-                    return pokemonEncountersList.Where(w => w.DodgeProbability == value).ToList();
-                case "form":
-                    return pokemonEncountersList.Where(w => w.Form == value).ToList();
-                case "max_pokemon_action_frequency":
-                    return pokemonEncountersList.Where(w => w.MaxPokemonActionFrequency == value).ToList();
-                case "min_pokemon_action_frequency":
-                    return pokemonEncountersList.Where(w => w.MinPokemonActionFrequency == value).ToList();
-                case "pokemon_id":
-                    return pokemonEncountersList.Where(w => w.PokemonId == Convert.ToInt32(value)).ToList();
-                case "pokemon_name":
-                    return pokemonEncountersList.Where(w => w.PokemonName.ToLower() == value.ToLower()).ToList();
-                default:
-                    return pokemonEncountersList;
-            }
+                "attackprobability" => pokemonEncountersList.Where(w => w.AttackProbability == value).ToList(),
+                "base_capture_rate" => pokemonEncountersList.Where(w => w.BaseCaptureRate == value).ToList(),
+                "base_flee_rate" => pokemonEncountersList.Where(w => w.BaseFleeRate == value).ToList(),
+                "dodge_probability" => pokemonEncountersList.Where(w => w.DodgeProbability == value).ToList(),
+                "form" => pokemonEncountersList.Where(w => w.Form == value).ToList(),
+                "max_pokemon_action_frequency" => pokemonEncountersList.Where(w => w.MaxPokemonActionFrequency == value).ToList(),
+                "min_pokemon_action_frequency" => pokemonEncountersList.Where(w => w.MinPokemonActionFrequency == value).ToList(),
+                "pokemon_id" => pokemonEncountersList.Where(w => w.PokemonId == Convert.ToInt32(value)).ToList(),
+                "pokemon_name" => pokemonEncountersList.Where(w => w.PokemonName.ToLower() == value.ToLower()).ToList(),
+                _ => pokemonEncountersList,
+            };
         }
 
         public static ObjectResult CheckSearchByAndValue(string searchBy, string value)

@@ -2,7 +2,6 @@
 using PokemonGOAPI.Interfaces.Services;
 using PokemonGOAPI.Utils;
 using RestSharp;
-using System;
 using System.Collections.Generic;
 
 namespace PokemonGOAPI.Services
@@ -15,8 +14,7 @@ namespace PokemonGOAPI.Services
 
         public WeatherBoostsResponse GetWeatherBoosts()
         {
-            Dictionary<string, List<string>> weatherBoostsDictionary = null;
-            weatherBoostsDictionary = RestClient.Execute<Dictionary<string, List<string>>>(RestRequest)?.Data;
+            Dictionary<string, List<string>> weatherBoostsDictionary = RestClient.Execute<Dictionary<string, List<string>>>(RestRequest)?.Data;
 
             if ( weatherBoostsDictionary == null || (weatherBoostsDictionary != null && weatherBoostsDictionary.Count == 0))
                 return ResponseFactory<WeatherBoostsResponse>.NothingReturnedFromTheRequestedList();

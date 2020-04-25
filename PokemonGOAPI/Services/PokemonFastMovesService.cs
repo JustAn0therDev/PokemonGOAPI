@@ -15,9 +15,7 @@ namespace PokemonGOAPI.Services
         
         public PokemonFastMovesResponse GetPokemonFastMoves()
         {
-            List<PokemonFastMoves> pokemonFastMoves = null;
-
-            pokemonFastMoves = RestClient.Execute<List<PokemonFastMoves>>(RestRequest).Data;
+            List<PokemonFastMoves> pokemonFastMoves = RestClient.Execute<List<PokemonFastMoves>>(RestRequest)?.Data;
 
             if (pokemonFastMoves != null && pokemonFastMoves.Count == 0)
                 return ResponseFactory<PokemonFastMovesResponse>.NothingReturnedFromTheRequestedList();

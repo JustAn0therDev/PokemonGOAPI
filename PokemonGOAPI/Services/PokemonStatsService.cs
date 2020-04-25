@@ -15,12 +15,10 @@ namespace PokemonGOAPI.Services
 
         public PokemonStatsResponse GetPokemonStats(string searchBy, string value)
         {
-            List<PokemonData> pokemonData = null;
-
             if (ReceivedArgumentsAreNotValid(searchBy, value))
                 return ResponseFactory<PokemonStatsResponse>.BothRequiredValuesForFilteringWereNotProvided();
 
-            pokemonData = RestClient.Execute<List<PokemonData>>(RestRequest)?.Data;
+            List<PokemonData> pokemonData = RestClient.Execute<List<PokemonData>>(RestRequest)?.Data;
 
             if (pokemonData == null || (pokemonData != null && pokemonData.Count == 0))
                 return ResponseFactory<PokemonStatsResponse>.NothingReturnedFromTheRequestedList();

@@ -14,9 +14,7 @@ namespace PokemonGOAPI.Services
 
         public NestingPokemonResponse GetNestingPokemon()
         {
-            Dictionary<string, List<NestingPokemon>> nestingPokemon = null;
-            
-            nestingPokemon = RestClient.Execute<Dictionary<string, List<NestingPokemon>>>(RestRequest)?.Data;
+            Dictionary<string, List<NestingPokemon>> nestingPokemon = RestClient.Execute<Dictionary<string, List<NestingPokemon>>>(RestRequest)?.Data;
 
             if (nestingPokemon == null || (nestingPokemon != null && nestingPokemon.Values.Count == 0))
                 return ResponseFactory<NestingPokemonResponse>.NothingReturnedFromTheRequestedList();

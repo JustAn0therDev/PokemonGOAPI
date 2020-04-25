@@ -15,8 +15,7 @@ namespace PokemonGOAPI.Services
 
         public ReleasedPokemonResponse GetReleasedPokemonResponse()
         {
-            Dictionary<string, List<PokemonNameObject>> releasedPokemonDictionary = null;
-            releasedPokemonDictionary = RestClient.Execute<Dictionary<string, List<PokemonNameObject>>>(RestRequest)?.Data;
+            Dictionary<string, List<PokemonNameObject>> releasedPokemonDictionary = RestClient.Execute<Dictionary<string, List<PokemonNameObject>>>(RestRequest)?.Data;
 
             if (releasedPokemonDictionary != null && releasedPokemonDictionary.Count == 0)
                 return ResponseFactory<ReleasedPokemonResponse>.NothingReturnedFromTheRequestedList();

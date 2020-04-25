@@ -14,9 +14,7 @@ namespace PokemonGOAPI.Services
         }
         public PokemonTypesResponse GetPokemonTypes(string pokemonName)
         {
-            List<PokemonType> pokemonTypes = null;
-
-            pokemonTypes = RestClient.Execute<List<PokemonType>>(RestRequest)?.Data;
+            List<PokemonType> pokemonTypes = RestClient.Execute<List<PokemonType>>(RestRequest)?.Data;
 
             if (pokemonTypes == null || (pokemonTypes != null && pokemonTypes.Count == 0))
                 return ResponseFactory<PokemonTypesResponse>.NothingReturnedFromTheRequestedList();
