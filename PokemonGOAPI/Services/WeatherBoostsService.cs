@@ -1,31 +1,34 @@
 ﻿using PokemonGOAPI.Entities.Arguments.Responses;
 using PokemonGOAPI.Interfaces.Services;
+using PokemonGOAPI.Utils;
 using RestSharp;
 using System;
 using System.Collections.Generic;
 
 namespace PokemonGOAPI.Services
 {
-    public class WeatherBoostsService : IWeatherBoostsService
+    public class WeatherBoostsService : BaseService, IWeatherBoostsService
     {
+        public override RestClient RestClient {
+            get => new RestClient("https://pokemon-go1.p.rapidapi.com/weather_boosts.json");
+        }
+
         public WeatherBoostsResponse GetWeatherBoosts()
         {
-            var resp = new WeatherBoostsResponse();
-            var client = new RestClient("https://pokemon-go1.p.rapidapi.com/weather_boosts.json");
+            Dictionary<string, List<string>> weatherBoostsDictionary = null;
+            weatherBoostsDictionary = RestClient.Execute<Dictionary<string, List<string>>>(RestRequest)?.Data;
 
-            var request = new RestRequest(Method.GET);
-            request.BuildDefaultHeaders();
-            resp.WeatherBoosts = client.Execute<Dictionary<string, List<string>>>(request).Data;
+            if ( weatherBoostsDictionary == null || (weatherBoostsDictionary != null && weatherBoostsDictionary.Count == 0))
+                return ResponseFactory<WeatherBoostsResponse>.NothingReturnedFromTheRequestedList();
 
-            if (resp.WeatherBoosts != null && resp.WeatherBoosts.Count == 0)
-            {
-                resp.Message = "Nothing returned from the weather boosts list.";
-                return resp;
-            }
-
-            resp.Success = true;
-            resp.Message = "Weather boosts list retrived successfully.";
-            return resp;
+            return ListWasRetrievedSuccessfully(weatherBoostsDictionary);
         }
+        
+        private WeatherBoostsResponse ListWasRetrievedSuccessfully(Dictionary<string, List<string>> weatherBoostsDictionary) 
+            => new WeatherBoostsResponse {
+                Success = true,
+                Message = "Weather boosts list retrieved successfully.",
+                WeatherBoosts = weatherBoostsDictionary
+            };
     }
 }
