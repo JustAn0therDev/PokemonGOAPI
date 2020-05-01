@@ -1,6 +1,6 @@
 ﻿using PokemonGOAPI.Interfaces;
 
-namespace PokemonGOAPI.Utils
+namespace System
 {
     public static class ResponseFactory<T> where T : IResponse, new()
     {
