@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using PokemonGOAPI.Entities.Arguments.Responses;
 using PokemonGOAPI.Interfaces.Services;
-using PokemonGOAPI.Utils;
+
 using RestSharp;
 
 namespace PokemonGOAPI.Services

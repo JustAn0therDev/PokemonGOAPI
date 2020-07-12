@@ -1,6 +1,6 @@
 ﻿using PokemonGOAPI.Entities.Arguments.Responses;
 using PokemonGOAPI.Interfaces.Services;
-using PokemonGOAPI.Utils;
+
 using RestSharp;
 using System;
 using System.Collections.Generic;
