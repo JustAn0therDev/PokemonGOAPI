@@ -355,3 +355,8 @@ MigrationBackup/
 # VSCode assets folder
 .vscode/
 PokemonGOAPI/.vscode/
+
+#Docker files
+Dockerfile
+.dockerignore
+dockerrun.sh
